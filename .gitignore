@@ -51,5 +51,7 @@ sysinfo.txt
 Icon?
 ehthumbs.db
 Thumbs.db
-# VS Code Environment Settings
+
+# Code Editor Environment Settings
 .vscode
+.vsconfig
