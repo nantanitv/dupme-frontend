@@ -19,17 +19,21 @@ public class PauseMenu : MonoBehaviour
         }
     }
 
-    void Resume()
+    public void Resume()
     {
         pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
         IsPaused = false;
     }
     
-    void Pause()
+    public void Pause()
     {
         pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
         IsPaused = true;
+    }
+
+    public void QuitGame()
+    {
+        Debug.Log("Quit");
+        Application.Quit();
     }
 }
