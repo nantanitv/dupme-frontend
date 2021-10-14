@@ -5,12 +5,12 @@ using UnityEngine;
 public class ChangeMaterialColor : MonoBehaviour
 {
     [SerializeField] private Renderer myObject;
+
     // Update is called once per frame
     void Update()
     {
         if (Input.GetMouseButtonDown(0))
         {
-
             hitChangeColor(Color.red);
         } else if (Input.GetMouseButtonUp(0))
         {
@@ -40,5 +40,9 @@ public class ChangeMaterialColor : MonoBehaviour
                 this.myObject.material.color = color;
             }
         }
+        //playNote(myObject.gameObject);
     }
+
+    
+
 }
