@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
+
 public class StartMenu : MonoBehaviour
 {
     // Adios Dupme
@@ -22,13 +23,26 @@ public class StartMenu : MonoBehaviour
         SceneManager.LoadScene("SettingsMenu");
     }
 
-    public void GoToCreateLobby()
+    public void GoToCreateRoom()
     {
         SceneManager.LoadScene("CreateRoomMenu");
     }
 
-    public void GoToJoinLobby()
+    public void GoToJoinRoom()
     {
         SceneManager.LoadScene("JoinRoomMenu");
+    }
+
+    public void GoToLobby()
+    {
+        SceneManager.LoadScene("Lobby");
+    }
+
+    public void GoToGame()
+    {
+        if (GameProperties.isHardMode)
+            SceneManager.LoadScene("HardMode");
+        else
+            SceneManager.LoadScene("EasyMode");
     }
 }

@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
+public static class GameSettings
+{
+    
+}
+
 public class GameProperties : MonoBehaviour
 {
     public static bool isHardMode = false;
