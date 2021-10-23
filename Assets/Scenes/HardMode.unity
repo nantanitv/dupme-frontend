@@ -645,6 +645,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 172516257}
+  - component: {fileID: 172516258}
   m_Layer: 5
   m_Name: BG color buttons
   m_TagString: Untagged
@@ -679,6 +680,24 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 100, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
+--- !u!114 &172516258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 172516256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4cc75adee1fc759448c15ba921b90439, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  top: {fileID: 1066270560}
+  bottom: {fileID: 1112832105}
+  left: {fileID: 802354272}
+  right: {fileID: 1703134690}
+  ahead: {fileID: 333767973}
+  behind: {fileID: 325586846}
 --- !u!1 &229663425
 GameObject:
   m_ObjectHideFlags: 0
@@ -1839,7 +1858,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 391849007}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGRed
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &391849007
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2144,7 +2175,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 432509018}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGPink
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &432509018
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2529,7 +2572,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 532019031}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGOrange
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &532019031
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3203,7 +3258,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 755177957}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGGreen
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &755177957
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5021,7 +5088,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1110266145}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGWhite
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1110266145
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7816,7 +7895,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1727697179}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGBlue
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1727697179
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8573,7 +8664,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2002316478}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGYellow
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2002316478
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -9235,7 +9338,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2080929631}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 172516258}
+        m_TargetAssemblyTypeName: ChangeBG, Assembly-CSharp
+        m_MethodName: BGBlack
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2080929631
 MonoBehaviour:
   m_ObjectHideFlags: 0
