@@ -1,35 +1,44 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class ObjectClicker : MonoBehaviour
 {
-    public AudioSource C4;
+    public AudioSource CN4;
     public AudioSource CS4;
-    public AudioSource D4;
+    public AudioSource DN4;
     public AudioSource DS4;
-    public AudioSource E4;
-    public AudioSource F4;
+    public AudioSource EN4;
+    public AudioSource FN4;
     public AudioSource FS4;
-    public AudioSource G4;
+    public AudioSource GN4;
     public AudioSource GS4;
-    public AudioSource A4;
+    public AudioSource AN4;
     public AudioSource AS4;
-    public AudioSource B4;
-    public AudioSource C5;
+    public AudioSource BN4;
+    public AudioSource CN5;
     public AudioSource CS5;
-    public AudioSource D5;
+    public AudioSource DN5;
     public AudioSource DS5;
-    public AudioSource E5;
-    public AudioSource F5;
+    public AudioSource EN5;
+    public AudioSource FN5;
     public AudioSource FS5;
-    public AudioSource G5;
+    public AudioSource GN5;
     public AudioSource GS5;
-    public AudioSource A5;
+    public AudioSource AN5;
     public AudioSource AS5;
-    public AudioSource B5;
-    public AudioSource C6;
+    public AudioSource BN5;
+    public AudioSource CN6;
 
+    public static string previousNoteClick;
+
+    public string id;
+
+    private void Start()
+    {
+        GameEvents.current.onNoteClick += onNotePlay;
+    }
 
     void Update()
     {
@@ -42,39 +51,38 @@ public class ObjectClicker : MonoBehaviour
             {
                 if (hit.transform)
                 {
-                    playNote(hit.transform.gameObject);
+                    GameEvents.current.NoteClick(hit.transform.gameObject.name);
                 }
             }
         }
     }
-
-    private void playNote(GameObject key)
+    private void onNotePlay(string id)
     {
-        if (key.name == "C4") C4.Play();
-        else if (key.name == "C-sharp 4") CS4.Play();
-        else if (key.name == "D4") D4.Play();
-        else if (key.name == "D-sharp 4") DS4.Play();
-        else if (key.name == "E4") E4.Play();
-        else if (key.name == "F4") F4.Play();
-        else if (key.name == "F-sharp 4") FS4.Play();
-        else if (key.name == "G4") G4.Play();
-        else if (key.name == "G-sharp 4") GS4.Play();
-        else if (key.name == "A4") A4.Play();
-        else if (key.name == "A-sharp 4") AS4.Play();
-        else if (key.name == "B4") B4.Play();
+        if (id == "CN4") CN4.Play();
+        else if (id == "CS4") CS4.Play();
+        else if (id == "DN4") DN4.Play();
+        else if (id == "DS4") DS4.Play();
+        else if (id == "EN4") EN4.Play();
+        else if (id == "FN4") FN4.Play();
+        else if (id == "FS4") FS4.Play();
+        else if (id == "GN4") GN4.Play();
+        else if (id == "GS4") GS4.Play();
+        else if (id == "AN4") AN4.Play();
+        else if (id == "AS4") AS4.Play();
+        else if (id == "BN4") BN4.Play();
 
-        else if (key.name == "C5") C5.Play();
-        else if (key.name == "C-sharp 5") CS5.Play();
-        else if (key.name == "D5") D5.Play();
-        else if (key.name == "D-sharp 5") DS5.Play();
-        else if (key.name == "E5") E5.Play();
-        else if (key.name == "F5") F5.Play();
-        else if (key.name == "F-sharp 5") FS5.Play();
-        else if (key.name == "G5") G5.Play();
-        else if (key.name == "G-sharp 5") GS5.Play();
-        else if (key.name == "A5") A5.Play();
-        else if (key.name == "A-sharp 5") AS5.Play();
-        else if (key.name == "B5") B5.Play();
-        else if (key.name == "C6") C6.Play();
+        else if (id == "CN5") CN5.Play();
+        else if (id == "CS5") CS5.Play();
+        else if (id == "DN5") DN5.Play();
+        else if (id == "DS5") DS5.Play();
+        else if (id == "EN5") EN5.Play();
+        else if (id == "FN5") FN5.Play();
+        else if (id == "FS5") FS5.Play();
+        else if (id == "GN5") GN5.Play();
+        else if (id == "GS5") GS5.Play();
+        else if (id == "AN5") AN5.Play();
+        else if (id == "AS5") AS5.Play();
+        else if (id == "BN5") BN5.Play();
+        else if (id == "CN6") CN6.Play();
     }
 }
