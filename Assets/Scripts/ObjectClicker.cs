@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using SocketIO;
 
 public class ObjectClicker : MonoBehaviour
 {
@@ -30,10 +31,9 @@ public class ObjectClicker : MonoBehaviour
     public AudioSource B5;
     public AudioSource C6;
 
-
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !(PauseMenu.IsPaused))
+        if (Input.GetMouseButtonDown(0) && !(PauseMenu.IsPaused) && GameComponents.playable)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -42,10 +42,28 @@ public class ObjectClicker : MonoBehaviour
             {
                 if (hit.transform)
                 {
-                    playNote(hit.transform.gameObject);
+                    GameObject note = hit.transform.gameObject;
+                    string noteName = generateNoteObj(note.name);
+                    if (NotesReceiver.Receiver.noteIsValid(noteName))
+                    {
+                        playNote(note);
+                        GameSocket.sendNote(noteName);
+                        Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
+                        GameComponents.numKeys--;
+                        Debug.Log("[ObjClicker] numKeys: " + GameComponents.numKeys);
+                    }
                 }
             }
         }
+    }
+
+    private string generateNoteObj(string keyName)
+    {
+        int slen = keyName.Length;
+        string suffix = slen > 3 ? "S" : "N";
+        string toSend = keyName[0] + suffix + keyName[slen - 1];
+        Debug.Log(toSend);
+        return toSend;
     }
 
     private void playNote(GameObject key)

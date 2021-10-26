@@ -1669,13 +1669,25 @@ MonoBehaviour:
   m_CharacterLimit: 2
   m_OnEndEdit:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 1786407746}
+        m_TargetAssemblyTypeName: GameProperties, Assembly-CSharp
+        m_MethodName: SetNumRounds
+        m_Mode: 2
+        m_Arguments:
+          m_ObjectArgument: {fileID: 2034657877}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.UI.InputField, UnityEngine.UI
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
   m_OnSubmit:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1786407746}
         m_TargetAssemblyTypeName: GameProperties, Assembly-CSharp
-        m_MethodName: SetNumTurns
+        m_MethodName: SetNumRounds
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 2034657877}

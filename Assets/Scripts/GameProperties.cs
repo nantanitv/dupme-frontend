@@ -3,22 +3,17 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public static class GameSettings
-{
-    
-}
-
 public class GameProperties : MonoBehaviour
 {
     public static bool isHardMode = false;
-    public static int numTurns = 3;
+    public static int numRounds = 2;
 
-    // Set number of turns in Create Menu
-    public void SetNumTurns(InputField newNumTurns)
+    // Set number of rounds (2*turns) in Create Menu
+    public void SetNumRounds(InputField newNumRounds)
     {
-        int turns = int.Parse(newNumTurns.text);
-        numTurns = turns;
-        Debug.Log(numTurns);
+        int rounds = int.Parse(newNumRounds.text);
+        numRounds = rounds >= 2 ? rounds : 2;
+        Debug.Log(numRounds);
     }
 
     // Toggle Hard/Easy mode in Create Menu
