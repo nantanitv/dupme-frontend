@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using System.Net.Http;
 using System;
 using UnityEngine;
@@ -13,32 +14,34 @@ public class Client : MonoBehaviour
     public static string username = Environment.GetEnvironmentVariable("DUPME_AUTH_USERNAME");
     public static string uid = Environment.GetEnvironmentVariable("DUPME_AUTH_UID");
 
-    private static string AUTH_TOKEN_= "";
+    private static string AUTH_TOKEN_;
 
-    private void Start()
+    private async void Start()
     {
-        
+        EnvLoader.Load();
+        Debug.Log(username);
+        Debug.Log(uid);
+        await CheckAlive();
     }
 
-    private void setPlayerName(InputField inputName)
+    public void setPlayerName(InputField inputName)
+    {
+        GameComponents.me.name = inputName.text;
+    }
+
+    public async void initGameAsync()
     { 
-        GameComponents.me.name = inputName.ToString();
+        await Login();
+        await CreateUser(GameComponents.me.name);
     }
 
-    private void initGame()
-    {
-        string name = GameComponents.me.name;
-        CreateUser(name);
-        Login();
-    }
-
-    async public static void CheckAlive()
+    async public static Task CheckAlive()
     {
         using var client = new HttpClient();
         var content = await client.GetStringAsync(URL_DEV_ + "check-alive/");
     }
 
-    async public static void Login()
+    async public static Task Login()
     {
         using var client = new HttpClient();
         var authData = new Dictionary<string, string>()
@@ -55,29 +58,39 @@ public class Client : MonoBehaviour
         Debug.Log("[Client] Status " + response.StatusCode);
         Dictionary<string, string> content = ContentToDictAsync(response.Content);
         string token = content["token"];
-        Debug.Log("[Client] Token: " + token);
         AUTH_TOKEN_ = token;
+        Debug.Log("[Client] Added: " + AUTH_TOKEN_);
     }
 
-    async public static void CreateUser(string name)
+    async public static Task CreateUser(string name)
     {
+        string url = URL_DEV_ + "create-user/";
         using var client = new HttpClient();
-        if (AUTH_TOKEN_.Equals("")) Login();
-        client.DefaultRequestHeaders.Add("token", AUTH_TOKEN_);
-        string url = URL_DEV_ + "/create-user/";
-        
-        var payload = new Dictionary<string, string>()
+
+        HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
+        httpRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+
+        /*var payload = new Dictionary<string, string>()
         {
             { "username", name }
         };
 
-        var postData = new FormUrlEncodedContent(payload);
-        var response = await client.PostAsync(url, postData);
+
+        var jsonPayload = new JSONObject(payload);
+        string ct = jsonPayload.Print();
+        Debug.Log("[JSON] " + ct);
+        httpRequest.Content = new StringContent(ct, System.Text.Encoding.UTF8, "application/json");*/
+
+        string payload = "{ \"username\": \"" + name + "\" }";
+        Debug.Log(payload);
+        httpRequest.Content = new StringContent(payload, System.Text.Encoding.UTF8, "application/json");
+
+        // httpRequest.Content = new FormUrlEncodedContent(payload);
+        var response = await client.SendAsync(httpRequest);
+        Debug.Log("[CreateUser] Status " + response.StatusCode);
+
         Dictionary<string, string> content = ContentToDictAsync(response.Content);
-        foreach (var key in content.Keys)
-        {
-            Debug.Log("[CreateUser] " + key + ": " + content[key]);
-        }
+        Debug.Log("[CreateUser] Status: " + content["status"]);
     }
 
     private static Dictionary<string, string> ContentToDictAsync(HttpContent content)

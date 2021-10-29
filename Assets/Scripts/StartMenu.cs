@@ -10,12 +10,7 @@ public class StartMenu : MonoBehaviour
 {
     private void Start()
     {
-        
-        EnvLoader.Load();
-        Debug.Log(Client.username);
-        Debug.Log(Client.uid);
-        Client.CheckAlive();
-        Client.Login();
+
     }
     
     public static void QuitGame()
@@ -34,11 +29,8 @@ public class StartMenu : MonoBehaviour
         SceneManager.LoadScene("SettingsMenu");
     }
 
-    async public void GoToCreateRoom()
-    {
-        /*using var client = new HttpClient();
-        var response = await client.PostAsync(url, data);
-        string result = response.Content.ReadAsStringAsync().Result;*/
+    public void GoToCreateRoom()
+    { 
         SceneManager.LoadScene("CreateRoomMenu");
     }
 
