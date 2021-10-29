@@ -12,7 +12,6 @@ public class GameSocket : MonoBehaviour
     public class Room
     {
         string id;
-
     }
 
     // Start is called before the first frame update

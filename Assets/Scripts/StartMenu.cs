@@ -1,14 +1,22 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.Net.Http;
+using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
 public class StartMenu : MonoBehaviour
 {
-    public static string url_dev = "dupme-backend-staging.heroku.app";
-    public static string url = "dupme-backend.heroku.app";
+    private void Start()
+    {
+        
+        EnvLoader.Load();
+        Debug.Log(Client.username);
+        Debug.Log(Client.uid);
+        Client.CheckAlive();
+        Client.Login();
+    }
     
     public static void QuitGame()
     {

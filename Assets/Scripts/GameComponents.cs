@@ -65,6 +65,12 @@ public class GameComponents : MonoBehaviour
         {
             if (Input.GetKeyDown(KeyCode.Space))
             {
+                string notes = "";
+                foreach(var note in rcv.correctSequence)
+                {
+                    notes += note + " ";
+                }
+                Debug.Log("Correct Sequence: " + notes);
                 newRound();
             }
             if (numKeys > 0)
@@ -82,7 +88,6 @@ public class GameComponents : MonoBehaviour
             playable = false;
             Debug.Log("[GameComp] Playable: " + playable);
             GameSocket.sendScore(99);
-
         }
 
         if (currentRound > GameProperties.numRounds)
@@ -106,9 +111,13 @@ public class GameComponents : MonoBehaviour
     {
         ++currentRound;
         Debug.Log("[GameComp] Current Round: " + currentRound + "/" + GameProperties.numRounds);
+
         playable = true;
         updateNumKeys();
         Debug.Log("[GameComp] Playable Keys: " + numKeys);
+
+        rcv.correctSequence.Clear();
+        rcv.replySequence.Clear();
     }
 
     public void updateTurn()
