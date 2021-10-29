@@ -9,6 +9,12 @@ public class GameSocket : MonoBehaviour
 {
     public static SocketIOComponent so;
 
+    public class Room
+    {
+        string id;
+
+    }
+
     // Start is called before the first frame update
     void Start()
     {
@@ -68,15 +74,28 @@ public class GameSocket : MonoBehaviour
         Debug.Log("[SocketIO] Emitted data: " + toSend.Print());
     }
 
-    public static void sendResults(List<string> notes, int score)
+    public static void sendScore(int score)
     {
-        var eventData = new Dictionary<string, dynamic>()
+        var eventData = new Dictionary<string, string>()
         {
-            { "notes", notes },
-            { "score", score }
+            { "score", score.ToString() }
         };
+
+        JSONObject toSend = new JSONObject(eventData);
+        // so.Emit("res", toSend);
+        Debug.Log("[SocketIO] Emitted score: " + toSend.Print());
+    }
+
+    /*
+    public static void sendReplyNotes(List<string> notes)
+    {
+        var eventData = new Dictionary<string, string[]>()
+        {
+            { "notes", notes.ToArray() }
+        };
+
         JSONObject toSend = JSONTemplates.TOJSON(eventData);
         so.Emit("res", toSend);
-        Debug.Log("[SocketIO] Emitted data: " + toSend.Print());
-    }
+        Debug.Log("[SocketIO] Emitted reply: " + toSend.Print());
+    }*/
 }

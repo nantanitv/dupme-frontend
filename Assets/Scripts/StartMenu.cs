@@ -1,12 +1,15 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Net.Http;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
 
 public class StartMenu : MonoBehaviour
 {
-    // Adios Dupme
+    public static string url_dev = "dupme-backend-staging.heroku.app";
+    public static string url = "dupme-backend.heroku.app";
+    
     public static void QuitGame()
     {
         Debug.Log("Quit");
@@ -23,8 +26,11 @@ public class StartMenu : MonoBehaviour
         SceneManager.LoadScene("SettingsMenu");
     }
 
-    public void GoToCreateRoom()
+    async public void GoToCreateRoom()
     {
+        /*using var client = new HttpClient();
+        var response = await client.PostAsync(url, data);
+        string result = response.Content.ReadAsStringAsync().Result;*/
         SceneManager.LoadScene("CreateRoomMenu");
     }
 
@@ -40,9 +46,7 @@ public class StartMenu : MonoBehaviour
 
     public void GoToGame()
     {
-        if (GameProperties.isHardMode)
-            SceneManager.LoadScene("HardMode");
-        else
-            SceneManager.LoadScene("EasyMode");
+        if (GameProperties.isHardMode) SceneManager.LoadScene("HardMode");
+        else SceneManager.LoadScene("EasyMode");
     }
 }

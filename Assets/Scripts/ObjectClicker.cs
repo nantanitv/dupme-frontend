@@ -47,35 +47,13 @@ public class ObjectClicker : MonoBehaviour
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
 
             if (Physics.Raycast(ray, out hit, 100f))
-            {
-                if (hit.transform)
-                {
-                    GameEvents.current.NoteClick(hit.transform.gameObject.name);
-                    GameObject note = hit.transform.gameObject;
-                    string noteName = generateNoteObj(note.name);
-                    if (NotesReceiver.Receiver.noteIsValid(noteName))
-                    {
-                        GameSocket.sendNote(noteName);
-                        Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
-                        GameComponents.numKeys--;
-                        Debug.Log("[ObjClicker] numKeys: " + GameComponents.numKeys);
-                    }
-                }
-            }
+                if (hit.transform) GameEvents.current.NoteClick(hit.transform.gameObject.name);
         }
-    }
-
-    private string generateNoteObj(string keyName)
-    {
-        int slen = keyName.Length;
-        string suffix = slen > 3 ? "S" : "N";
-        string toSend = keyName[0] + suffix + keyName[slen - 1];
-        Debug.Log(toSend);
-        return toSend;
     }
 
     private void onNotePlay(string id)
     {
+        #region Play note sound
         if (id == "CN4") CN4.Play();
         else if (id == "CS4") CS4.Play();
         else if (id == "DN4") DN4.Play();
@@ -102,5 +80,12 @@ public class ObjectClicker : MonoBehaviour
         else if (id == "AS5") AS5.Play();
         else if (id == "BN5") BN5.Play();
         else if (id == "CN6") CN6.Play();
+        #endregion
+
+        GameSocket.sendNote(id);
+        GameComponents.rcv.inputNote(id, false);
+        Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
+        GameComponents.numKeys--;
+        Debug.Log("[ObjClicker] numKeys: " + GameComponents.numKeys);
     }
 }
