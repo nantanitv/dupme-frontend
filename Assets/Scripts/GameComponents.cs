@@ -9,6 +9,7 @@ public class GameComponents : MonoBehaviour
     public class Player
     {
         public string name;
+        public string uuid;
         public int avatarID;
         public bool isTurn;
         public string playerID;
@@ -30,6 +31,8 @@ public class GameComponents : MonoBehaviour
         }
     }
     #endregion
+
+
 
     #region Attibutes
     public static bool playable;

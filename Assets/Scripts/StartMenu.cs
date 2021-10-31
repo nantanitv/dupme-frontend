@@ -4,6 +4,7 @@ using System.Net.Http;
 using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 
 public class StartMenu : MonoBehaviour
@@ -30,7 +31,7 @@ public class StartMenu : MonoBehaviour
     }
 
     public void GoToCreateRoom()
-    { 
+    {
         SceneManager.LoadScene("CreateRoomMenu");
     }
 
@@ -42,6 +43,17 @@ public class StartMenu : MonoBehaviour
     public void GoToLobby()
     {
         SceneManager.LoadScene("Lobby");
+    }
+
+    public async void CreateRoom()
+    {
+        await Client.CreateRoom();
+    }
+
+    public async void JoinRoom(InputField roomIdInput)
+    {
+        GameProperties.roomId = roomIdInput.text;
+        await Client.JoinRoom();
     }
 
     public void GoToGame()

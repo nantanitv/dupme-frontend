@@ -16,12 +16,9 @@ public class Client : MonoBehaviour
 
     private static string AUTH_TOKEN_;
 
-    private async void Start()
+    private void Start()
     {
-        EnvLoader.Load();
-        Debug.Log(username);
-        Debug.Log(uid);
-        await CheckAlive();
+        
     }
 
     public void setPlayerName(InputField inputName)
@@ -30,7 +27,9 @@ public class Client : MonoBehaviour
     }
 
     public async void initGameAsync()
-    { 
+    {
+        EnvLoader.Load();
+        Debug.Log("[Username] " + username);
         await Login();
         await CreateUser(GameComponents.me.name);
     }
@@ -50,47 +49,61 @@ public class Client : MonoBehaviour
             { "uid", uid }
         };
 
-        var postData = new FormUrlEncodedContent(authData);
+        var payload = new FormUrlEncodedContent(authData);
 
         string url = URL_DEV_ + "login/";
-        var response = await client.PostAsync(url, postData);
+        var response = await client.PostAsync(url, payload);
 
         Debug.Log("[Client] Status " + response.StatusCode);
         Dictionary<string, string> content = ContentToDictAsync(response.Content);
-        string token = content["token"];
-        AUTH_TOKEN_ = token;
+
+        AUTH_TOKEN_ = content["token"];
         Debug.Log("[Client] Added: " + AUTH_TOKEN_);
     }
 
+    // THANKS PUTTER
     async public static Task CreateUser(string name)
     {
-        string url = URL_DEV_ + "create-user/";
+        string url = URL_DEV_ + "create-user?username=" + name;
+        Dictionary<string, string> content = await Post(url);
+        GameComponents.me.uuid = content["uuid"];
+    }
+
+    async public static Task ChangeName(string name)
+    {
+        string url = URL_DEV_ + "user/" + GameComponents.me.uuid + "/change?to=" + name;
+        await Post(url);
+    }
+
+    async public static Task CreateRoom()
+    {
+        string url = 
+            URL_DEV_ + "create-room?uuid=" + GameComponents.me.uuid + 
+            "&difficulty=" + (GameProperties.isHardMode ? "1" : "0") + 
+            "&turns=" + GameProperties.numRounds;
+        Dictionary<string, string> content = await Post(url);
+        GameProperties.roomId = content["room_id"];
+        Debug.Log("[CreateRoom] Room ID: " + GameProperties.roomId);
+    }
+
+    async public static Task JoinRoom()
+    {
+        string url = URL_DEV_ + "room/" + GameProperties.roomId + "/join?uuid=" + GameComponents.me.uuid;
+        await Post(url);
+    }
+
+    async static Task<Dictionary<string, string>> Post(string url)
+    {
         using var client = new HttpClient();
+        Debug.Log("[URL] " + url);
 
-        HttpRequestMessage httpRequest = new HttpRequestMessage(HttpMethod.Post, url);
-        httpRequest.Headers.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
-
-        /*var payload = new Dictionary<string, string>()
-        {
-            { "username", name }
-        };
-
-
-        var jsonPayload = new JSONObject(payload);
-        string ct = jsonPayload.Print();
-        Debug.Log("[JSON] " + ct);
-        httpRequest.Content = new StringContent(ct, System.Text.Encoding.UTF8, "application/json");*/
-
-        string payload = "{ \"username\": \"" + name + "\" }";
-        Debug.Log(payload);
-        httpRequest.Content = new StringContent(payload, System.Text.Encoding.UTF8, "application/json");
-
-        // httpRequest.Content = new FormUrlEncodedContent(payload);
-        var response = await client.SendAsync(httpRequest);
-        Debug.Log("[CreateUser] Status " + response.StatusCode);
+        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+        var response = await client.PostAsync(url, null);
 
         Dictionary<string, string> content = ContentToDictAsync(response.Content);
-        Debug.Log("[CreateUser] Status: " + content["status"]);
+        Debug.Log("[POST] Status " + response.StatusCode);
+
+        return content;
     }
 
     private static Dictionary<string, string> ContentToDictAsync(HttpContent content)
