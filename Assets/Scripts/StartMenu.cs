@@ -21,7 +21,13 @@ public class StartMenu : MonoBehaviour
         Application.Quit();
     }
 
-    public void GoToStartMenu()
+    async public static void BackFromLobby()
+    {
+        await Client.CloseRoom();
+        GoToStartMenu();
+    }
+
+    public static void GoToStartMenu()
     {
         SceneManager.LoadScene("StartMenu");
     }

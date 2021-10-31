@@ -14,7 +14,7 @@ public class Client : MonoBehaviour
     public static string username = Environment.GetEnvironmentVariable("DUPME_AUTH_USERNAME");
     public static string uid = Environment.GetEnvironmentVariable("DUPME_AUTH_UID");
 
-    private static string AUTH_TOKEN_;
+    public static string AUTH_TOKEN_;
 
     private void Start()
     {
@@ -32,12 +32,6 @@ public class Client : MonoBehaviour
         Debug.Log("[Username] " + username);
         await Login();
         await CreateUser(GameComponents.me.name);
-    }
-
-    async public static Task CheckAlive()
-    {
-        using var client = new HttpClient();
-        var content = await client.GetStringAsync(URL_DEV_ + "check-alive/");
     }
 
     async public static Task Login()
@@ -66,7 +60,8 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "user/" + GameComponents.me.uuid + "/logout/";
         await Post(url);
     }
-
+    
+    #region User Requests
     // THANKS PUTTER
     async public static Task CreateUser(string name)
     {
@@ -80,7 +75,9 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "user/" + GameComponents.me.uuid + "/change?to=" + name;
         await Post(url);
     }
+    #endregion
 
+    #region Room Requests
     async public static Task CreateRoom()
     {
         string url = 
@@ -98,6 +95,34 @@ public class Client : MonoBehaviour
         await Post(url);
     }
 
+    async public static Task KickUser()
+    {
+        string url = URL_DEV_ + "room/" + GameProperties.roomId + "/kick";
+        await Post(url);
+    }
+
+    async public static Task CloseRoom()
+    {
+        string url = URL_DEV_ + "room/" + GameProperties.roomId + "/close";
+        await Post(url);
+    }
+    #endregion
+
+    #region Game Requests
+    async public static Task StartGame()
+    {
+        string url = URL_DEV_ + "room/" + GameProperties.roomId + "/start";
+        await Post(url);
+    }
+
+    async public static Task EndGame()
+    {
+        string url = URL_DEV_ + "room/" + GameProperties.roomId + "/end";
+        await Post(url);
+    }
+    #endregion
+
+    #region Utility functions
     async static Task<Dictionary<string, string>> Post(string url)
     {
         using var client = new HttpClient();
@@ -123,4 +148,11 @@ public class Client : MonoBehaviour
         Dictionary<string, string> jsDict = js.ToDictionary();
         return jsDict;
     }
+
+    async public static Task CheckAlive()
+    {
+        using var client = new HttpClient();
+        var content = await client.GetStringAsync(URL_DEV_ + "check-alive/");
+    }
+    #endregion
 }

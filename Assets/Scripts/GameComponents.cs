@@ -32,8 +32,6 @@ public class GameComponents : MonoBehaviour
     }
     #endregion
 
-
-
     #region Attibutes
     public static bool playable;
     public static bool goFirst;
@@ -95,8 +93,7 @@ public class GameComponents : MonoBehaviour
         if (currentRound > GameProperties.numRounds)
         {
             Debug.Log("[GameComp] Game Ends");
-            StartMenu endGame = new StartMenu();
-            endGame.GoToStartMenu();
+            StartMenu.GoToStartMenu();
         }
         /*
         if (!playable && numKeys > 0)

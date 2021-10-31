@@ -9,21 +9,18 @@ public class GameSocket : MonoBehaviour
 {
     public static SocketIOComponent so;
 
-    public class Room
-    {
-        string id;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
         GameObject go = GameObject.Find("SocketIO");
         so = go.GetComponent<SocketIOComponent>();
+        so.url = Client.URL_DEV_;
+        so.SetHeader("Bearer", Client.AUTH_TOKEN_);
 
         so.On("open", openConnection);
         so.On("close", closeConnection);
         so.On("note", rcvNote);
-        so.On("res", rcvResults);
+        so.On("results", rcvResults);
     }
 
     // Update is called once per frame
