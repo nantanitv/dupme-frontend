@@ -18,10 +18,8 @@ public class PauseMenu : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            if (IsPaused)
-                Resume();
-            else
-                Pause();
+            if (IsPaused) Resume();
+            else Pause();
         }
     }
 
@@ -35,11 +33,5 @@ public class PauseMenu : MonoBehaviour
     {
         pauseMenuUI.SetActive(true);
         IsPaused = true;
-    }
-
-    public static void QuitGame()
-    {
-        Debug.Log("Quit");
-        Application.Quit();
     }
 }

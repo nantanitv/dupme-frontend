@@ -23,7 +23,6 @@ public class ChangeMaterialColor : MonoBehaviour
                 hitChangeColor(Color.white);
                 myObject.material.color = Color.white;
             }
-            
         }
     }
 

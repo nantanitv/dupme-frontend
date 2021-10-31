@@ -61,6 +61,12 @@ public class Client : MonoBehaviour
         Debug.Log("[Client] Added: " + AUTH_TOKEN_);
     }
 
+    async public static Task LogOut()
+    {
+        string url = URL_DEV_ + "user/" + GameComponents.me.uuid + "/logout/";
+        await Post(url);
+    }
+
     // THANKS PUTTER
     async public static Task CreateUser(string name)
     {

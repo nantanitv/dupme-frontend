@@ -13,10 +13,11 @@ public class StartMenu : MonoBehaviour
     {
 
     }
-    
-    public static void QuitGame()
+
+    async public static void QuitGame()
     {
         Debug.Log("Quit");
+        await Client.LogOut();
         Application.Quit();
     }
 
