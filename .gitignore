@@ -55,3 +55,6 @@ Thumbs.db
 # Code Editor Environment Settings
 .vscode
 .vsconfig
+
+# Environment Variables
+.env

@@ -7,6 +7,7 @@ public class GameProperties : MonoBehaviour
 {
     public static bool isHardMode = false;
     public static int numRounds = 2;
+    public static string roomId;
 
     // Set number of rounds (2*turns) in Create Menu
     public void SetNumRounds(InputField newNumRounds)

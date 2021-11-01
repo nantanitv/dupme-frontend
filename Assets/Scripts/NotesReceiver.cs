@@ -9,8 +9,14 @@ public class NotesReceiver
 
     public class Receiver
     {
-        List<string> correctSequence;   // List of notes coming from the first player
-        List<string> replySequence;     // List of "answer" notes
+        public List<string> correctSequence;   // List of notes coming from the first player
+        public List<string> replySequence;     // List of "answer" notes
+
+        public Receiver()
+        {
+            correctSequence = new List<string>() {  };
+            replySequence = new List<string>() {  };
+        }
 
         // Put a note in the corresponding list
         // isReply: Incoming note = false, Reply note = true
@@ -18,10 +24,8 @@ public class NotesReceiver
         {
             if (noteIsValid(n))
             {
-                if (!isReply)
-                    correctSequence.Add(n);
-                else
-                    replySequence.Add(n);
+                if (!isReply) correctSequence.Add(n);
+                else replySequence.Add(n);
             }
         }
 
@@ -29,8 +33,7 @@ public class NotesReceiver
         public static bool noteIsValid(string n)
         {
             // Easy Mode: Check if the note is in Easy range
-            if (!GameProperties.isHardMode)
-                return notesEasy.Contains(n);
+            if (!GameProperties.isHardMode) return notesEasy.Contains(n);
 
             // Hard Mode: Check if the note is in either range
             return notesEasy.Contains(n) || notesHard.Contains(n);
@@ -42,10 +45,8 @@ public class NotesReceiver
             int score = 0;
             while (correctSequence.Count > 0)
             {
-                if (noteMatched(correctSequence[0], replySequence[0]))
-                    ++score;
-                if (replySequence.Count == 0)
-                    break;
+                if (noteMatched(correctSequence[0], replySequence[0])) ++score;
+                if (replySequence.Count == 0) break;
                 correctSequence.RemoveAt(0);
                 replySequence.RemoveAt(0);
             }

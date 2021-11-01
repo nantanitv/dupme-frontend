@@ -14,11 +14,13 @@ public class GameSocket : MonoBehaviour
     {
         GameObject go = GameObject.Find("SocketIO");
         so = go.GetComponent<SocketIOComponent>();
+        so.url = Client.URL_DEV_;
+        so.SetHeader("Bearer", Client.AUTH_TOKEN_);
 
         so.On("open", openConnection);
         so.On("close", closeConnection);
         so.On("note", rcvNote);
-        so.On("res", rcvResults);
+        so.On("results", rcvResults);
     }
 
     // Update is called once per frame
@@ -68,15 +70,28 @@ public class GameSocket : MonoBehaviour
         Debug.Log("[SocketIO] Emitted data: " + toSend.Print());
     }
 
-    public static void sendResults(List<string> notes, int score)
+    public static void sendScore(int score)
     {
-        var eventData = new Dictionary<string, dynamic>()
+        var eventData = new Dictionary<string, string>()
         {
-            { "notes", notes },
-            { "score", score }
+            { "score", score.ToString() }
         };
+
+        JSONObject toSend = new JSONObject(eventData);
+        // so.Emit("res", toSend);
+        Debug.Log("[SocketIO] Emitted score: " + toSend.Print());
+    }
+
+    /*
+    public static void sendReplyNotes(List<string> notes)
+    {
+        var eventData = new Dictionary<string, string[]>()
+        {
+            { "notes", notes.ToArray() }
+        };
+
         JSONObject toSend = JSONTemplates.TOJSON(eventData);
         so.Emit("res", toSend);
-        Debug.Log("[SocketIO] Emitted data: " + toSend.Print());
-    }
+        Debug.Log("[SocketIO] Emitted reply: " + toSend.Print());
+    }*/
 }
