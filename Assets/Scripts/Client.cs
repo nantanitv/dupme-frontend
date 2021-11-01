@@ -124,7 +124,8 @@ public class Client : MonoBehaviour
     async public static Task StartGame()
     {
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/start";
-        await Post(url);
+        Dictionary<string, string> content = await Post(url);
+        GameComponents.goFirst = content["starts_with"].Equals(GameComponents.me.uuid);
     }
 
     async public static Task EndGame()
