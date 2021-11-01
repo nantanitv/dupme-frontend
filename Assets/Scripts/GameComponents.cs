@@ -41,7 +41,7 @@ public class GameComponents : MonoBehaviour
     public static int numKeys;
     public static int currentRound = 0;
 
-    public static NotesReceiver.Receiver rcv = new NotesReceiver.Receiver();
+    public static NotesReceiver rcv = new NotesReceiver();
 
     public static Player me = new Player("Alice");
     public static Player them = new Player("Bobby");
@@ -54,7 +54,7 @@ public class GameComponents : MonoBehaviour
     {
         goFirst = true;
         gameProps = gameObject.AddComponent<GameProperties>();
-        newRound();
+        NewRound();
 
         Debug.Log("[GameComp] The game has started. Players: " + me.name + " vs " + them.name);
         Debug.Log("[GameComp] Number of rounds: " + GameProperties.numRounds);
@@ -67,7 +67,7 @@ public class GameComponents : MonoBehaviour
     {
         if (!playable)
         {
-            if (Input.GetKeyDown(KeyCode.Space)) newRound();
+            if (Input.GetKeyDown(KeyCode.Space)) NewRound();
             if (numKeys > 0 && !timeIsRunning)
             {
                 playable = true;
@@ -84,10 +84,10 @@ public class GameComponents : MonoBehaviour
             if (timeLimit > 0) timeLimit -= Time.deltaTime;
             else
             {
-                endTurn();
+                EndTurn();
                 Debug.Log("[Time] Time's Up");
             }
-            if (playable && numKeys == 0) endTurn();
+            if (playable && numKeys == 0) EndTurn();
         }      
 
         if (currentRound > GameProperties.numRounds)
@@ -103,15 +103,15 @@ public class GameComponents : MonoBehaviour
         }*/
     }
 
-    private void endTurn()
+    private void EndTurn()
     {
         timeIsRunning = false;
         playable = false;
         Debug.Log("[GameComp] Turn Ended");
-        GameSocket.sendScore(99);
+        GameSocket.SendScore(99);
     }
 
-    private void updateNumKeys()
+    private void UpdateNumKeys()
     {
         if (currentRound > 6) numKeys = 10;
         else if (currentRound == 1) numKeys = 5;
@@ -120,26 +120,25 @@ public class GameComponents : MonoBehaviour
         Debug.Log("[UpdateNumKeys] " + numKeys);
     }
 
-    public void newRound()
+    public void NewRound()
     {
         ++currentRound;
         Debug.Log("[GameComp] Current Round: " + currentRound + "/" + GameProperties.numRounds);
 
         playable = true;
-        updateNumKeys();
-        updateTurn();
+        UpdateNumKeys();
+        UpdateTurn();
         Debug.Log("[GameComp] Playable Keys: " + numKeys);
 
-        rcv.correctSequence.Clear();
-        rcv.replySequence.Clear();
+        NotesReceiver.ResetSequences();
     }
 
-    public void updateTurn()
+    public void UpdateTurn()
     {
-        updateTimer();
+        UpdateTimer();
     }
 
-    private void updateTimer()
+    private void UpdateTimer()
     {
         timeLimit = goFirst ? 10 : 20;
         timeIsRunning = true;

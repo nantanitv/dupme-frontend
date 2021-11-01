@@ -21,12 +21,12 @@ public class Client : MonoBehaviour
         
     }
 
-    public void setPlayerName(InputField inputName)
+    public void SetPlayerName(InputField inputName)
     {
         GameComponents.me.name = inputName.text;
     }
 
-    public async void initGameAsync()
+    public async void InitGameAsync()
     {
         EnvLoader.Load();
         Debug.Log("[Username] " + username);
@@ -57,7 +57,7 @@ public class Client : MonoBehaviour
 
     async public static Task LogOut()
     {
-        string url = URL_DEV_ + "user/" + GameComponents.me.uuid + "/logout/";
+        string url = URL_DEV_ + "user/" + GameComponents.me.uuid + "/logout";
         await Post(url);
     }
     
@@ -106,6 +106,18 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/close";
         await Post(url);
     }
+
+    async public static Task ResetRoom(string toReset)
+    {
+        string url = URL_DEV_ + "room/" + toReset + "/close";
+        await Post(url);
+    }
+
+    async public static Task ResetAllRooms()
+    {
+        string url = URL_DEV_ + "misc/reset";
+        await Post(url);
+    }
     #endregion
 
     #region Game Requests
@@ -139,10 +151,10 @@ public class Client : MonoBehaviour
 
     private static Dictionary<string, string> ContentToDictAsync(HttpContent content)
     {
-        return jsonStringToDict(content.ReadAsStringAsync().Result);
+        return JsonStringToDict(content.ReadAsStringAsync().Result);
     }
 
-    private static Dictionary<string, string> jsonStringToDict(string json)
+    private static Dictionary<string, string> JsonStringToDict(string json)
     {
         JSONObject js = new JSONObject(json);
         Dictionary<string, string> jsDict = js.ToDictionary();

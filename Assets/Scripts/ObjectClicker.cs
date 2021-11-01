@@ -82,10 +82,10 @@ public class ObjectClicker : MonoBehaviour
         else if (id == "CN6") CN6.Play();
         #endregion
 
-        GameSocket.sendNote(id);
-        GameComponents.rcv.inputNote(id, false);
-        Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
+        GameSocket.SendNote(id);
+        NotesReceiver.InputNote(id, false);
+        // Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
         GameComponents.numKeys--;
-        Debug.Log("[ObjClicker] numKeys: " + GameComponents.numKeys);
+        Debug.Log("[ObjClicker] Keys left: " + GameComponents.numKeys);
     }
 }
