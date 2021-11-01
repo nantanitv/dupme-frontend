@@ -81,17 +81,4 @@ public class GameSocket : MonoBehaviour
         so.Emit("result", toSend);
         Debug.Log("[SocketIO] Emitted score: " + toSend.Print());
     }
-
-    /*
-    public static void sendReplyNotes(List<string> notes)
-    {
-        var eventData = new Dictionary<string, string[]>()
-        {
-            { "notes", notes.ToArray() }
-        };
-
-        JSONObject toSend = JSONTemplates.TOJSON(eventData);
-        so.Emit("res", toSend);
-        Debug.Log("[SocketIO] Emitted reply: " + toSend.Print());
-    }*/
 }

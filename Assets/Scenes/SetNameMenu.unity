@@ -1047,7 +1047,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1786407746}
         m_TargetAssemblyTypeName: Client, Assembly-CSharp
-        m_MethodName: setPlayerName
+        m_MethodName: SetPlayerName
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1893938681}
@@ -1062,7 +1062,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1786407746}
         m_TargetAssemblyTypeName: Client, Assembly-CSharp
-        m_MethodName: setPlayerName
+        m_MethodName: SetPlayerName
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1893938681}
@@ -1077,7 +1077,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1786407746}
         m_TargetAssemblyTypeName: Client, Assembly-CSharp
-        m_MethodName: setPlayerName
+        m_MethodName: SetPlayerName
         m_Mode: 2
         m_Arguments:
           m_ObjectArgument: {fileID: 1893938681}
