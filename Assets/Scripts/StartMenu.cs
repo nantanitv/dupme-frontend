@@ -1,7 +1,5 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.Http;
-using System.IO;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
@@ -14,19 +12,7 @@ public class StartMenu : MonoBehaviour
 
     }
 
-    async public static void QuitGame()
-    {
-        Debug.Log("Quit");
-        await Client.LogOut();
-        Application.Quit();
-    }
-
-    async public static void BackFromLobby()
-    {
-        await Client.CloseRoom();
-        GoToStartMenu();
-    }
-
+    #region Load Scenes
     public static void GoToStartMenu()
     {
         SceneManager.LoadScene("StartMenu");
@@ -52,6 +38,31 @@ public class StartMenu : MonoBehaviour
         SceneManager.LoadScene("Lobby");
     }
 
+    public void GoToAdminPanel()
+    {
+        SceneManager.LoadScene("AdminMenu");
+    }
+
+    public void GoToGame()
+    {
+        if (GameProperties.isHardMode) SceneManager.LoadScene("HardMode");
+        else SceneManager.LoadScene("EasyMode");
+    }
+    #endregion
+
+    async public static void QuitGame()
+    {
+        Debug.Log("Quit");
+        await Client.LogOut();
+        Application.Quit();
+    }
+
+    async public static void BackFromLobby()
+    {
+        await Client.CloseRoom();
+        GoToStartMenu();
+    }
+
     public async void CreateRoom()
     {
         await Client.CreateRoom();
@@ -59,13 +70,23 @@ public class StartMenu : MonoBehaviour
 
     public async void JoinRoom(InputField roomIdInput)
     {
-        GameProperties.roomId = roomIdInput.text;
-        await Client.JoinRoom();
+        string input = roomIdInput.text;
+        if (input.Equals("ADMIN")) GoToAdminPanel();
+        else
+        {
+            GameProperties.roomId = input;
+            await Client.JoinRoom();
+            GoToLobby();
+        }
     }
 
-    public void GoToGame()
+    public async void ResetRoom(InputField roomToReset)
     {
-        if (GameProperties.isHardMode) SceneManager.LoadScene("HardMode");
-        else SceneManager.LoadScene("EasyMode");
+        await Client.ResetRoom(roomToReset.text);
+    }
+
+    public async void ResetAllRoom()
+    {
+        await Client.ResetAllRooms();
     }
 }

@@ -1,9 +1,9 @@
 using System.Collections;
 using System.Collections.Generic;
-using System.Net.WebSockets;
 using UnityEngine;
 using SocketIO;
 using System;
+using System.Net.Http;
 
 public class GameSocket : MonoBehaviour
 {
@@ -17,10 +17,10 @@ public class GameSocket : MonoBehaviour
         so.url = Client.URL_DEV_;
         so.SetHeader("Bearer", Client.AUTH_TOKEN_);
 
-        so.On("open", openConnection);
-        so.On("close", closeConnection);
-        so.On("note", rcvNote);
-        so.On("results", rcvResults);
+        so.On("open", OpenConnection);
+        so.On("close", CloseConnection);
+        so.On("note", ReceiveNote);
+        so.On("results", ReceiveResults);
     }
 
     // Update is called once per frame
@@ -29,69 +29,56 @@ public class GameSocket : MonoBehaviour
 
     }
 
-    void openConnection(SocketIOEvent e)
+    void OpenConnection(SocketIOEvent e)
     {
         Debug.Log("[SocketIO] Connection Opened");
     }
 
-    void closeConnection(SocketIOEvent e)
+    void CloseConnection(SocketIOEvent e)
     {
         Debug.Log("[SocketIO] Connection Closed");
     }
 
-    void rcvNote(SocketIOEvent e)
+    void ReceiveNote(SocketIOEvent e)
     {
         var noteVal = e.data.ToDictionary()["note"];
         Debug.Log("[SocketIO] Note data received: " + noteVal);
 
-        NotesReceiver.Receiver rcv = new NotesReceiver.Receiver();
-        if (NotesReceiver.Receiver.noteIsValid(noteVal))
+        if (NotesReceiver.NoteIsValid(noteVal))
         {
-            rcv.inputNote(noteVal, false);
+            NotesReceiver.InputNote(noteVal, false);
         }
     }
 
-    void rcvResults(SocketIOEvent e)
+    void ReceiveResults(SocketIOEvent e)
     {
-        var replyNotesVal = e.data.ToDictionary()["notes"];
+        // var replyNotesVal = e.data.ToDictionary()["notes"];
         int score = int.Parse(e.data.ToDictionary()["score"]);
 
         Debug.Log("[SocketIO] Score received: " + score);
     }
 
-    public static void sendNote(string n)
+    public static void SendNote(string n)
     {
         Dictionary<string, string> eventData = new Dictionary<string, string>()
         {
             { "note", n }
         };
+
         JSONObject toSend = new JSONObject(eventData);
-        // so.Emit("note", toSend);
+        so.Emit("note", toSend);
         Debug.Log("[SocketIO] Emitted data: " + toSend.Print());
     }
 
-    public static void sendScore(int score)
+    public static void SendScore(int score)
     {
-        var eventData = new Dictionary<string, string>()
+        Dictionary<string, string> eventData = new Dictionary<string, string>()
         {
             { "score", score.ToString() }
         };
 
         JSONObject toSend = new JSONObject(eventData);
-        // so.Emit("res", toSend);
+        so.Emit("result", toSend);
         Debug.Log("[SocketIO] Emitted score: " + toSend.Print());
     }
-
-    /*
-    public static void sendReplyNotes(List<string> notes)
-    {
-        var eventData = new Dictionary<string, string[]>()
-        {
-            { "notes", notes.ToArray() }
-        };
-
-        JSONObject toSend = JSONTemplates.TOJSON(eventData);
-        so.Emit("res", toSend);
-        Debug.Log("[SocketIO] Emitted reply: " + toSend.Print());
-    }*/
 }
