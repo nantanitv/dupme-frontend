@@ -41,7 +41,7 @@ public class ObjectClicker : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !(PauseMenu.IsPaused) && GameComponents.playable)
+        if (Input.GetMouseButtonDown(0) && !(PauseMenu.IsPaused) && GameComponents.mePlayable)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -82,7 +82,7 @@ public class ObjectClicker : MonoBehaviour
         else if (id == "CN6") CN6.Play();
         #endregion
 
-        GameSocket.SendNote(id);
+        // GameSocket.SendNote(id);
         NotesReceiver.InputNote(id, false);
         // Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
         GameComponents.numKeys--;

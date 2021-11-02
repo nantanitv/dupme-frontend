@@ -33,8 +33,8 @@ public class GameComponents : MonoBehaviour
     #endregion
 
     #region Attibutes
-    public static bool playable;
-    public static bool goFirst;
+    public static bool mePlayable;
+    public static bool meGoesFirst;
     private float timeLimit;
     private bool timeIsRunning;
 
@@ -52,27 +52,32 @@ public class GameComponents : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        goFirst = true;
-        gameProps = gameObject.AddComponent<GameProperties>();
+        meGoesFirst = true;
+        if (meGoesFirst)
+        {
+            mePlayable = true;
+        }
+
         NewRound();
 
         Debug.Log("[GameComp] The game has started. Players: " + me.name + " vs " + them.name);
         Debug.Log("[GameComp] Number of rounds: " + GameProperties.numRounds);
         Debug.Log("[GameComp] Difficulty: " + (GameProperties.isHardMode ? "Hard" : "Easy"));
-        Debug.Log("[GameComp] Playable: " + playable);
+        Debug.Log("[GameComp] Playable: " + mePlayable);
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!playable)
+        if (!mePlayable)
         {
             if (Input.GetKeyDown(KeyCode.Space)) NewRound();
+            /*
             if (numKeys > 0 && !timeIsRunning)
             {
                 playable = true;
                 Debug.Log("[GameComp] Playable: " + playable);
-            }
+            }*/
         }
     }
 
@@ -87,7 +92,7 @@ public class GameComponents : MonoBehaviour
                 EndTurn();
                 Debug.Log("[Time] Time's Up");
             }
-            if (playable && numKeys == 0) EndTurn();
+            if (numKeys == 0) EndTurn();
         }      
 
         if (currentRound > GameProperties.numRounds)
@@ -106,7 +111,7 @@ public class GameComponents : MonoBehaviour
     private void EndTurn()
     {
         timeIsRunning = false;
-        playable = false;
+        mePlayable = false;
         Debug.Log("[GameComp] Turn Ended");
         GameSocket.SendScore(99);
     }
@@ -124,23 +129,21 @@ public class GameComponents : MonoBehaviour
     {
         ++currentRound;
         Debug.Log("[GameComp] Current Round: " + currentRound + "/" + GameProperties.numRounds);
-
-        playable = true;
         UpdateNumKeys();
         UpdateTurn();
         Debug.Log("[GameComp] Playable Keys: " + numKeys);
-
         NotesReceiver.ResetSequences();
     }
 
     public void UpdateTurn()
     {
+        mePlayable = !mePlayable;
         UpdateTimer();
     }
 
     private void UpdateTimer()
     {
-        timeLimit = goFirst ? 10 : 20;
+        timeLimit = meGoesFirst ? 10 : 20;
         timeIsRunning = true;
         Debug.Log("[GameComp] Updated time limit: " + timeLimit);
     }
