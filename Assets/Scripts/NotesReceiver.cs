@@ -6,41 +6,41 @@ public class NotesReceiver
 {
     static List<string> notesEasy = new List<string>() { "CN4", "CS4", "DN4", "DS4", "EN4", "FN4", "FS4", "GN4", "GS4", "AN4", "AS4", "BN4", "CN5" };
     static List<string> notesHard = new List<string>() { "CS5", "DN5", "DS5", "EN5", "FN5", "FS5", "GN5", "GS5", "AN5", "AS5", "BN5", "CN6" };
+    static List<string> correctSequence;   // List of notes coming from the first player
+    static List<string> replySequence;     // List of "answer" notes
 
-    public class Receiver
+    public static void ResetSequences()
     {
-        public List<string> correctSequence;   // List of notes coming from the first player
-        public List<string> replySequence;     // List of "answer" notes
+        correctSequence = new List<string>() {  };
+        replySequence = new List<string>() {  };
+    }
 
-        public Receiver()
+    // Put a note in the corresponding list
+    // isReply: Incoming note = false, Reply note = true
+    public static void InputNote(string n, bool isReply)
+    {
+        if (NoteIsValid(n))
         {
-            correctSequence = new List<string>() {  };
-            replySequence = new List<string>() {  };
+            if (!isReply) correctSequence.Add(n);
+            else replySequence.Add(n);
         }
+    }
 
-        // Put a note in the corresponding list
-        // isReply: Incoming note = false, Reply note = true
-        public void inputNote(string n, bool isReply)
-        {
-            if (noteIsValid(n))
-            {
-                if (!isReply) correctSequence.Add(n);
-                else replySequence.Add(n);
-            }
-        }
+    // Check validity of the note value `n` to prevent processing other object names
+    public static bool NoteIsValid(string n)
+    {
+        // Easy Mode: Check if the note is in Easy range
+        if (!GameProperties.isHardMode) return notesEasy.Contains(n);
 
-        // Check validity of the note value `n` to prevent processing other object names
-        public static bool noteIsValid(string n)
-        {
-            // Easy Mode: Check if the note is in Easy range
-            if (!GameProperties.isHardMode) return notesEasy.Contains(n);
+        // Hard Mode: Check if the note is in either range
+        return notesEasy.Contains(n) || notesHard.Contains(n);
+    }
 
-            // Hard Mode: Check if the note is in either range
-            return notesEasy.Contains(n) || notesHard.Contains(n);
-        }
-
-        // Count the number of correct valid notes
-        public int calculateScore()
+    // Count the number of correct valid notes
+    public static int CalculateScore()
+    {
+        int score = 0;
+        while (correctSequence.Count > 0)
         {
             int score = 0;
             bool scorable = true;
@@ -54,11 +54,12 @@ public class NotesReceiver
             }
             return score;
         }
+        return score;
+    }
 
-        // Check validity and correctness of the reply note
-        private bool noteMatched(string correctNote, string replyNote)
-        {
-            return correctNote.Equals(replyNote) && noteIsValid(correctNote) && noteIsValid(replyNote);
-        }
+    // Check validity and correctness of the reply note
+    private static bool NoteMatched(string correctNote, string replyNote)
+    {
+        return correctNote.Equals(replyNote) && NoteIsValid(correctNote) && NoteIsValid(replyNote);
     }
 }

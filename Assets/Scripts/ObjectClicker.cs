@@ -77,7 +77,7 @@ public class ObjectClicker : MonoBehaviour
 
     void Update()
     {
-        if (Input.GetMouseButtonDown(0) && !(PauseMenu.IsPaused) && GameComponents.playable)
+        if (Input.GetMouseButtonDown(0) && !(PauseMenu.IsPaused) && GameComponents.mePlayable)
         {
             RaycastHit hit;
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
@@ -153,10 +153,10 @@ public class ObjectClicker : MonoBehaviour
         
         #endregion
 
-        GameSocket.sendNote(id);
-        GameComponents.rcv.inputNote(id, false);
-        Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
+        // GameSocket.SendNote(id);
+        NotesReceiver.InputNote(id, false);
+        // Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
         GameComponents.numKeys--;
-        Debug.Log("[ObjClicker] numKeys: " + GameComponents.numKeys);
+        Debug.Log("[ObjClicker] Keys left: " + GameComponents.numKeys);
     }
 }
