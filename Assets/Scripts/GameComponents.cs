@@ -5,29 +5,26 @@ using System.Timers;
 
 public class GameComponents : MonoBehaviour
 {
-    #region Class Player
+    #region Player
     public class Player
     {
         public string name;
         public string uuid;
+        public int score = 0;
         public int avatarID;
-        public bool isTurn;
-        public string playerID;
+        public bool isTurn = false;
 
         public Player(string id)
         {
             name = "Bob";
-            avatarID = 0;
             isTurn = false;
-            playerID = id;
+            uuid = id;
         }
 
         public Player(string id, string name)
         {
+            new Player(id);
             this.name = name;
-            avatarID = 0;
-            isTurn = false;
-            playerID = id;
         }
     }
     #endregion
@@ -35,70 +32,59 @@ public class GameComponents : MonoBehaviour
     #region Attibutes
     public static bool mePlayable;
     public static bool meGoesFirst;
-    private float timeLimit;
-    private bool timeIsRunning;
+    private static float timeLimit;
+    private static bool timeIsRunning;
 
     public static int numKeys;
     public static int currentRound = 0;
 
-    public static NotesReceiver rcv = new NotesReceiver();
-
-    public static Player me = new Player("Alice");
-    public static Player them = new Player("Bobby");
-
-    public GameProperties gameProps;
+    public static Player me = new Player("", "Alice");
+    public static Player them = new Player("", "Bobby");
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         meGoesFirst = true;
-        if (meGoesFirst)
-        {
-            mePlayable = true;
-        }
-
-        NewRound();
-
-        Debug.Log("[GameComp] The game has started. Players: " + me.name + " vs " + them.name);
-        Debug.Log("[GameComp] Number of rounds: " + GameProperties.numRounds);
-        Debug.Log("[GameComp] Difficulty: " + (GameProperties.isHardMode ? "Hard" : "Easy"));
-        Debug.Log("[GameComp] Playable: " + mePlayable);
+        StartCoroutine(meGoesFirst ? PlayFirst() : WaitFirst());
     }
 
     // Update is called once per frame
     void Update()
-    {
+    { 
+        /*
         if (!mePlayable)
         {
             if (Input.GetKeyDown(KeyCode.Space)) NewRound();
-            /*
+            
             if (numKeys > 0 && !timeIsRunning)
             {
                 playable = true;
                 Debug.Log("[GameComp] Playable: " + playable);
-            }*/
-        }
+            }
+        }*/
     }
 
     private void FixedUpdate()
     {
+        /*
         if (timeIsRunning)
         {
-            Debug.Log("[Time] " + timeLimit);
+            Debug.Log($"[Time] {timeLimit}");
             if (timeLimit > 0) timeLimit -= Time.deltaTime;
             else
             {
-                EndTurn();
+                EndMyTurn();
                 Debug.Log("[Time] Time's Up");
             }
-            if (numKeys == 0) EndTurn();
-        }      
+            if (numKeys == 0) EndMyTurn();
+        }      */
 
         if (currentRound > GameProperties.numRounds)
         {
             Debug.Log("[GameComp] Game Ends");
-            StartMenu.GoToStartMenu();
+            Debug.Log($"Scores: {me.name} = {me.score} vs {them.name} = {them.score}");
+            EndMyTurn();
         }
         /*
         if (!playable && numKeys > 0)
@@ -108,15 +94,80 @@ public class GameComponents : MonoBehaviour
         }*/
     }
 
-    private void EndTurn()
+    #region Game Managers
+    public static void StartGame()
+    {
+        if (meGoesFirst)
+        {
+            me.isTurn = true;
+            mePlayable = true;
+        }
+        NewRound();
+
+        Debug.Log($"[GameComp] The game has started. Players: {me.name} vs {them.name}");
+        Debug.Log($"[GameComp] Number of rounds: {GameProperties.numRounds}");
+        Debug.Log($"[GameComp] Difficulty: {(GameProperties.isHardMode ? "Hard" : "Easy")}");
+        Debug.Log($"[GameComp] Playable: {mePlayable}");
+    }
+
+    public static void EndGame()
+    {
+        numKeys = 0;
+        me.isTurn = false;
+        mePlayable = false;
+    }
+    #endregion
+
+    #region Turn/Round Managers
+    IEnumerator PlayFirst()
+    {
+        StartMyTurn();
+        while (timeIsRunning)
+        {
+            Debug.Log($"[Time] {timeLimit}");
+            if (timeLimit > 0) timeLimit -= Time.deltaTime;
+            else
+            {
+                EndMyTurn();
+                Debug.Log("[Time] Time's Up");
+            }
+            if (numKeys == 0) EndMyTurn();
+            yield return null;
+        }
+    }
+
+    IEnumerator WaitFirst()
+    {
+        
+        yield return null;
+    }
+
+    public static void NewRound()
+    {
+        ++currentRound;
+        Debug.Log($"[GameComp] Current Round: {currentRound}/{GameProperties.numRounds}");
+        UpdateNumKeys();
+        Debug.Log($"[GameComp] Playable Keys: {numKeys}");
+        NotesReceiver.ResetSequences();
+    }
+
+    public static void StartMyTurn()
+    {
+        mePlayable = true;
+        NewTimer();
+    }
+
+    private static void EndMyTurn()
     {
         timeIsRunning = false;
         mePlayable = false;
         Debug.Log("[GameComp] Turn Ended");
         GameSocket.SendScore(99);
     }
+    #endregion
 
-    private void UpdateNumKeys()
+    #region Utilities
+    private static void UpdateNumKeys()
     {
         if (currentRound > 6) numKeys = 10;
         else if (currentRound == 1) numKeys = 5;
@@ -125,26 +176,11 @@ public class GameComponents : MonoBehaviour
         Debug.Log("[UpdateNumKeys] " + numKeys);
     }
 
-    public void NewRound()
-    {
-        ++currentRound;
-        Debug.Log("[GameComp] Current Round: " + currentRound + "/" + GameProperties.numRounds);
-        UpdateNumKeys();
-        UpdateTurn();
-        Debug.Log("[GameComp] Playable Keys: " + numKeys);
-        NotesReceiver.ResetSequences();
-    }
-
-    public void UpdateTurn()
-    {
-        mePlayable = !mePlayable;
-        UpdateTimer();
-    }
-
-    private void UpdateTimer()
+    private static void NewTimer()
     {
         timeLimit = meGoesFirst ? 10 : 20;
         timeIsRunning = true;
         Debug.Log("[GameComp] Updated time limit: " + timeLimit);
     }
+    #endregion
 }

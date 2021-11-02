@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class NotesReceiver
 {
-    static List<string> notesEasy = new List<string>() { "CN4", "CS4", "DN4", "DS4", "EN4", "FN4", "FS4", "GN4", "GS4", "AN4", "AS4", "BN4", "CN5" };
-    static List<string> notesHard = new List<string>() { "CS5", "DN5", "DS5", "EN5", "FN5", "FS5", "GN5", "GS5", "AN5", "AS5", "BN5", "CN6" };
+    static readonly List<string> notesEasy = new List<string>() { "CN4", "CS4", "DN4", "DS4", "EN4", "FN4", "FS4", "GN4", "GS4", "AN4", "AS4", "BN4", "CN5" };
+    static readonly List<string> notesHard = new List<string>() { "CS5", "DN5", "DS5", "EN5", "FN5", "FS5", "GN5", "GS5", "AN5", "AS5", "BN5", "CN6" };
     static List<string> correctSequence;   // List of notes coming from the first player
     static List<string> replySequence;     // List of "answer" notes
 
@@ -23,6 +23,8 @@ public class NotesReceiver
         {
             if (!isReply) correctSequence.Add(n);
             else replySequence.Add(n);
+
+            ObjectClicker.onNotePlay(n);
         }
     }
 

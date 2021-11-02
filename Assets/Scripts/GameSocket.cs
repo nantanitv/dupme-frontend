@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using SocketIO;
 using System;
-using System.Net.Http;
+using Newtonsoft.Json;
 
 public class GameSocket : MonoBehaviour
 {
@@ -17,10 +17,13 @@ public class GameSocket : MonoBehaviour
         so.url = Client.URL_DEV_;
         so.SetHeader("Bearer", Client.AUTH_TOKEN_);
 
-        so.On("open", OpenConnection);
-        so.On("close", CloseConnection);
-        so.On("note", ReceiveNote);
-        so.On("results", ReceiveResults);
+        so.On("server-reset", ServerResetHandler => {
+            Debug.Log("[SERVER] Server Reset");
+            StartMenu.GoToStartMenu();
+        });
+
+        so.On("room-event", RoomEventHandler);
+        so.On("message", MessageHandler);
     }
 
     // Update is called once per frame
@@ -29,33 +32,37 @@ public class GameSocket : MonoBehaviour
 
     }
 
-    void OpenConnection(SocketIOEvent e)
+    void RoomEventHandler(SocketIOEvent e)
     {
-        Debug.Log("[SocketIO] Connection Opened");
+        Debug.Log("[RoomEventHandler] Got a room event");
+        string eventName = e.data.ToDictionary()["event"];
+        if (eventName.Equals("start_game")) GameComponents.StartGame();
+        else if (eventName.Equals("room_closed") || eventName.Equals("end_game")) GameComponents.EndGame();
     }
 
-    void CloseConnection(SocketIOEvent e)
+    void MessageHandler(SocketIOEvent e)
     {
-        Debug.Log("[SocketIO] Connection Closed");
+        Debug.Log("[MessageHandler] Got a message");
+        if (e.data.ToDictionary()["type"].Equals("note")) ReceiveNote(e);
+        else if (e.data.ToDictionary()["type"].Equals("score")) ReceiveResults(e);
     }
 
     void ReceiveNote(SocketIOEvent e)
     {
-        var noteVal = e.data.ToDictionary()["note"];
+        var noteVal = e.data.ToDictionary()["data"];
         Debug.Log("[SocketIO] Note data received: " + noteVal);
 
-        if (NotesReceiver.NoteIsValid(noteVal))
-        {
-            NotesReceiver.InputNote(noteVal, false);
-        }
+        if (NotesReceiver.NoteIsValid(noteVal)) NotesReceiver.InputNote(noteVal, false);
+        else if (noteVal.Equals("your_turn")) GameComponents.me.isTurn = true;
     }
 
     void ReceiveResults(SocketIOEvent e)
     {
         // var replyNotesVal = e.data.ToDictionary()["notes"];
-        int score = int.Parse(e.data.ToDictionary()["score"]);
+        int score = int.Parse(e.data.ToDictionary()["data"]);
 
         Debug.Log("[SocketIO] Score received: " + score);
+        GameComponents.them.score += score;
     }
 
     public static void SendNote(string n)
