@@ -43,9 +43,11 @@ public class NotesReceiver
         public int calculateScore()
         {
             int score = 0;
-            while (correctSequence.Count > 0)
+            bool scorable = true;
+            while (correctSequence.Count > 0 && scorable)
             {
                 if (noteMatched(correctSequence[0], replySequence[0])) ++score;
+                else if (!noteMatched(correctSequence[0], replySequence[0])) scorable = false;
                 if (replySequence.Count == 0) break;
                 correctSequence.RemoveAt(0);
                 replySequence.RemoveAt(0);
