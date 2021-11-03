@@ -12,12 +12,12 @@ public class Client : MonoBehaviour
 {
     class CreateRoomResponse
     {
-        public string RoomId { get; set; }
-        public string Host { get; set; }
-        public IList<string> Players { get; set; }
-        public object Settings { get; set; }
-        public string Status { get; set; }
-        public string Timecreated { get; set; }
+        public string room_id { get; set; }
+        public string host { get; set; }
+        public IList<string> players { get; set; }
+        public object settings { get; set; }
+        public string status { get; set; }
+        public string time_created { get; set; }
     }
 
     #region Attributes
@@ -104,10 +104,11 @@ public class Client : MonoBehaviour
         Debug.Log($"[POST] Status {response.StatusCode}");
 
         CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
-        GameProperties.roomId = room.RoomId;
+        Debug.Log($"{GameProperties.roomId}");
+        GameProperties.roomId = room.room_id;
         Debug.Log($"[CreateRoom] Room ID: {GameProperties.roomId}");
 
-        var players = room.Players;
+        var players = room.players;
         GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? players[1] : players[2];
     }
 

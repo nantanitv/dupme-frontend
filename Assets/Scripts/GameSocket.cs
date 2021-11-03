@@ -63,6 +63,7 @@ public class GameSocket : MonoBehaviour
 
         Debug.Log("[SocketIO] Score received: " + score);
         GameComponents.them.score += score;
+        GameComponents.me.isTurn = true;
     }
 
     public static void SendNote(string n)
