@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.Timers;
+using UnityEngine.SceneManagement;
 
 public class GameComponents : MonoBehaviour
 {
@@ -34,6 +35,7 @@ public class GameComponents : MonoBehaviour
     public static bool meGoesFirst;
     private static float timeLimit;
     private static bool timeIsRunning;
+    public static bool switchState = false;
 
     public static int numKeys;
     public static int currentRound = 0;
@@ -46,8 +48,27 @@ public class GameComponents : MonoBehaviour
     void Start()
     {
         meGoesFirst = true;
-        StartCoroutine(PlayFirst());
-        
+        while (currentRound < GameProperties.numRounds)
+        {
+            NewRound();
+            if (meGoesFirst)
+            {
+                StartCoroutine(PlayFirst());
+                GameSocketIO.SendEndSequence();
+                StartCoroutine(Wait());
+                switchState = false;
+            }
+            else
+            {
+                StartCoroutine(Wait());
+                switchState = false;
+                StartCoroutine(PlayLater());
+                int score = NotesReceiver.CalculateScore();
+                them.score += score;
+                GameSocketIO.SendScore(score);
+            }
+        }
+        EndGame();
     }
 
     // Update is called once per frame
@@ -87,13 +108,13 @@ public class GameComponents : MonoBehaviour
         numKeys = 0;
         me.isTurn = false;
         mePlayable = false;
+        SceneManager.LoadScene("Results");
     }
     #endregion
 
     #region Turn/Round Managers
     IEnumerator PlayFirst()
     {
-        NewRound();
         StartMyTurn();
 
         while (timeIsRunning && mePlayable)
@@ -113,19 +134,31 @@ public class GameComponents : MonoBehaviour
 
     IEnumerator PlayLater()
     {
-        yield return null;
+        StartMyTurn();
+
+        while (timeIsRunning && mePlayable)
+        {
+            if (timeLimit > 0) timeLimit -= Time.deltaTime;
+            else
+            {
+                EndMyTurn();
+                Debug.Log("[Time] Time's Up");
+            }
+            if (numKeys == 0) EndMyTurn();
+            yield return null;
+        }
+
+        Debug.Log("[PlayLater] Done");
     }
 
-    IEnumerator WaitFirst()
+    IEnumerator Wait()
     {
-        
-        yield return null;
+        yield return new WaitUntil(SwitchingState);
     }
 
-    IEnumerator WaitLater()
+    private bool SwitchingState()
     {
-
-        yield return null;
+        return switchState;
     }
 
     public static void NewRound()
@@ -135,6 +168,7 @@ public class GameComponents : MonoBehaviour
         UpdateNumKeys();
         Debug.Log($"[GameComp] Playable Keys: {numKeys}");
         NotesReceiver.ResetSequences();
+        meGoesFirst = !meGoesFirst;
     }
 
     // Make client playable

@@ -19,6 +19,13 @@ public class Client : MonoBehaviour
         public string status { get; set; }
         public string time_created { get; set; }
     }
+    class RoomSettings
+    {
+        public int difficulty { get; set; }
+        public int levels { get; set; }
+        public int player_limit { get; set; }
+        public int turns { get; set; }
+    }
 
     #region Attributes
     public static string URL_DEV_ = "https://dupme-backend-staging.herokuapp.com/";
@@ -116,14 +123,24 @@ public class Client : MonoBehaviour
     {
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/join?uuid=" + GameComponents.me.uuid;
         await Post(url);
-        Dictionary<string, string> joinDict = new Dictionary<string, string>()
-        {
-            { "room_id", GameProperties.roomId }
-        };
-
-        var joinData = new JSONObject(joinDict);
-        await GameSocketIO.so.EmitAsync("join-room", joinData);
         Debug.Log($"[JoinRoom]: Joined");
+        await GetRoomInfo();
+    }
+
+    async public static Task GetRoomInfo()
+    {
+        string url = $"{URL_DEV_}room/{GameProperties.roomId}/status";
+        using var client = new HttpClient();
+        Debug.Log("[URL] " + url);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+        var response = await client.GetAsync(url);
+        Debug.Log(response.Content.ReadAsStringAsync().Result);
+        CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
+        RoomSettings roomset = JsonConvert.DeserializeObject<RoomSettings>(room.settings.ToString());
+        GameProperties.isHardMode = roomset.difficulty == 1;
+        Debug.Log($"[RoomInfo] Hardmode: {GameProperties.isHardMode}");
+        GameProperties.numRounds = roomset.turns;
     }
 
     async public static Task KickUser()
