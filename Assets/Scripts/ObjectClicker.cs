@@ -6,31 +6,31 @@ using SocketIO;
 
 public class ObjectClicker : MonoBehaviour
 {
-    public static AudioSource CN4;
-    public static AudioSource CS4;
-    public static AudioSource DN4;
-    public static AudioSource DS4;
-    public static AudioSource EN4;
-    public static AudioSource FN4;
-    public static AudioSource FS4;
-    public static AudioSource GN4;
-    public static AudioSource GS4;
-    public static AudioSource AN4;
-    public static AudioSource AS4;
-    public static AudioSource BN4;
-    public static AudioSource CN5;
-    public static AudioSource CS5;
-    public static AudioSource DN5;
-    public static AudioSource DS5;
-    public static AudioSource EN5;
-    public static AudioSource FN5;
-    public static AudioSource FS5;
-    public static AudioSource GN5;
-    public static AudioSource GS5;
-    public static AudioSource AN5;
-    public static AudioSource AS5;
-    public static AudioSource BN5;
-    public static AudioSource CN6;
+    public AudioSource CN4;
+    public AudioSource CS4;
+    public AudioSource DN4;
+    public AudioSource DS4;
+    public AudioSource EN4;
+    public AudioSource FN4;
+    public AudioSource FS4;
+    public AudioSource GN4;
+    public AudioSource GS4;
+    public AudioSource AN4;
+    public AudioSource AS4;
+    public AudioSource BN4;
+    public AudioSource CN5;
+    public AudioSource CS5;
+    public AudioSource DN5;
+    public AudioSource DS5;
+    public AudioSource EN5;
+    public AudioSource FN5;
+    public AudioSource FS5;
+    public AudioSource GN5;
+    public AudioSource GS5;
+    public AudioSource AN5;
+    public AudioSource AS5;
+    public AudioSource BN5;
+    public AudioSource CN6;
 
     public string id;
 
@@ -51,14 +51,18 @@ public class ObjectClicker : MonoBehaviour
         }
     }
 
-    public static void onNotePlay(string id)
+    public void onNotePlay(string id)
     {
         #region Play note sound
-        if (id == "CN4") CN4.Play();
-        else if (id == "CS4") CS4.Play();
+        if (id == "CN4")
+        {
+            CN4.Play();
+            Debug.Log("c4 ja");
+        }
         else if (id == "DN4") DN4.Play();
         else if (id == "DS4") DS4.Play();
         else if (id == "EN4") EN4.Play();
+        else if (id == "CS4") CS4.Play();
         else if (id == "FN4") FN4.Play();
         else if (id == "FS4") FS4.Play();
         else if (id == "GN4") GN4.Play();
@@ -82,10 +86,17 @@ public class ObjectClicker : MonoBehaviour
         else if (id == "CN6") CN6.Play();
         #endregion
 
+        
+        // separate into new fn
         // GameSocket.SendNote(id);
         NotesReceiver.InputNote(id, false);
         // Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
-        GameComponents.numKeys--;
-        Debug.Log("[ObjClicker] Keys left: " + GameComponents.numKeys);
+        if (NotesReceiver.NoteIsValid(id))
+        {
+            Debug.Log("Valid Note");
+            GameComponents.numKeys--;
+            Debug.Log("[ObjClicker] Keys left: " + GameComponents.numKeys);
+            Debug.Log($"[ObjClicker] Pressed {id}");
+        }
     }
 }

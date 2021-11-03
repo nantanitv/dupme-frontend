@@ -24,7 +24,7 @@ public class NotesReceiver
             if (!isReply) correctSequence.Add(n);
             else replySequence.Add(n);
 
-            ObjectClicker.onNotePlay(n);
+            //ObjectClicker.onNotePlay(n);
         }
     }
 

@@ -46,52 +46,24 @@ public class GameComponents : MonoBehaviour
     void Start()
     {
         meGoesFirst = true;
-        StartCoroutine(meGoesFirst ? PlayFirst() : WaitFirst());
+        StartCoroutine(PlayFirst());
+        
     }
 
     // Update is called once per frame
     void Update()
-    { 
-        /*
-        if (!mePlayable)
-        {
-            if (Input.GetKeyDown(KeyCode.Space)) NewRound();
-            
-            if (numKeys > 0 && !timeIsRunning)
-            {
-                playable = true;
-                Debug.Log("[GameComp] Playable: " + playable);
-            }
-        }*/
+    {
+
     }
 
     private void FixedUpdate()
     {
-        /*
-        if (timeIsRunning)
-        {
-            Debug.Log($"[Time] {timeLimit}");
-            if (timeLimit > 0) timeLimit -= Time.deltaTime;
-            else
-            {
-                EndMyTurn();
-                Debug.Log("[Time] Time's Up");
-            }
-            if (numKeys == 0) EndMyTurn();
-        }      */
-
         if (currentRound > GameProperties.numRounds)
         {
             Debug.Log("[GameComp] Game Ends");
             Debug.Log($"Scores: {me.name} = {me.score} vs {them.name} = {them.score}");
             EndMyTurn();
         }
-        /*
-        if (!playable && numKeys > 0)
-        {
-            updateTurn();
-            Debug.Log("[GameComp] Updated Turn Status: " + (goFirst ? "Go First" : "Respond"));
-        }*/
     }
 
     #region Game Managers
@@ -121,10 +93,11 @@ public class GameComponents : MonoBehaviour
     #region Turn/Round Managers
     IEnumerator PlayFirst()
     {
+        NewRound();
         StartMyTurn();
-        while (timeIsRunning)
+
+        while (timeIsRunning && mePlayable)
         {
-            Debug.Log($"[Time] {timeLimit}");
             if (timeLimit > 0) timeLimit -= Time.deltaTime;
             else
             {
@@ -134,11 +107,24 @@ public class GameComponents : MonoBehaviour
             if (numKeys == 0) EndMyTurn();
             yield return null;
         }
+
+        Debug.Log("[PlayFirst] Done");
+    }
+
+    IEnumerator PlayLater()
+    {
+        yield return null;
     }
 
     IEnumerator WaitFirst()
     {
         
+        yield return null;
+    }
+
+    IEnumerator WaitLater()
+    {
+
         yield return null;
     }
 
@@ -151,7 +137,8 @@ public class GameComponents : MonoBehaviour
         NotesReceiver.ResetSequences();
     }
 
-    public static void StartMyTurn()
+    // Make client playable
+    public void StartMyTurn()
     {
         mePlayable = true;
         NewTimer();
@@ -162,7 +149,7 @@ public class GameComponents : MonoBehaviour
         timeIsRunning = false;
         mePlayable = false;
         Debug.Log("[GameComp] Turn Ended");
-        GameSocket.SendScore(99);
+        //GameSocket.SendScore(99);
     }
     #endregion
 

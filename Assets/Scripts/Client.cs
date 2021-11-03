@@ -122,7 +122,7 @@ public class Client : MonoBehaviour
         };
 
         var joinData = new JSONObject(joinDict);
-        GameSocket.so.Emit("join-room", joinData);
+        await GameSocketIO.so.EmitAsync("join-room", joinData);
         Debug.Log($"[JoinRoom]: Joined");
     }
 

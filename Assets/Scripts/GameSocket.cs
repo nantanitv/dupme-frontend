@@ -7,7 +7,7 @@ using Newtonsoft.Json;
 
 public class GameSocket : MonoBehaviour
 {
-    public static SocketIOComponent so;
+    /*public static SocketIOComponent so;
 
     // Start is called before the first frame update
     void Start()
@@ -88,5 +88,5 @@ public class GameSocket : MonoBehaviour
         JSONObject toSend = new JSONObject(eventData);
         so.Emit("result", toSend);
         Debug.Log("[SocketIO] Emitted score: " + toSend.Print());
-    }
+    }*/
 }
