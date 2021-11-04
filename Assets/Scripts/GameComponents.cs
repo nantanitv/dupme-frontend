@@ -152,9 +152,10 @@ public class GameComponents : MonoBehaviour
 
     IEnumerator Wait()
     {
-        yield return new WaitUntil(SwitchingState);
+        while (!switchState) yield return null;
+        // yield return new WaitUntil(SwitchingState);
         switchState = false;
-
+        Debug.Log("switchState switched back");
         if (meGoesFirst)
         {
             NewRound();
@@ -213,7 +214,7 @@ public class GameComponents : MonoBehaviour
 
     private static void NewTimer()
     {
-        timeLimit = meGoesFirst ? 10 : 20;
+        timeLimit = meGoesFirst ? 10f : 20f;
         timeIsRunning = true;
         Debug.Log("[GameComp] Updated time limit: " + timeLimit);
     }

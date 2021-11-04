@@ -25,35 +25,18 @@ public class GameSocketIO : MonoBehaviour
             GameComponents.EndGame();
         });
 
-        /*
-        so.On("room-event", response =>
-        {
-            Debug.Log(response);
-            string content = response.GetValue<string>();
-            Debug.Log(content);
-            JObject roomEventResponse = JObject.Parse(content);
-            string eventType = roomEventResponse["event"].ToString();
-            Debug.Log(eventType);
-            if (eventType.Equals("start_game"))
-            {
-                Debug.Log("Going to game");
-                StartMenu.GoToGame();
-            }
-        });*/
-
-        /*  message: msg, note, endseq, score
-         *  score:  "S{score}S", e.g. "S3S"
-         *  endseq: "ENDSQ"
-         */
         so.On("message", response =>
         {
             Debug.Log(response);
 
             string content = response.GetValue<string>();
             Debug.Log(content);
+
+            if (content.Equals("ENDSEQ")) ReceiveEndSequence();
+            else if (content.StartsWith("S") && content.EndsWith("S")) ReceiveScore(content);
+            else if (NotesReceiver.NoteIsValid(content)) ReceiveNote(content);
+            
         });
-
-
 
         await so.ConnectAsync();
         await so.EmitAsync("message", "deez nutz");

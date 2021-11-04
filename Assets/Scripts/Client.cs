@@ -147,11 +147,6 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/join?uuid=" + GameComponents.me.uuid;
         await Post(url);
         Debug.Log($"[JoinRoom]: Joined");
-        /*
-        string joinReq = $"{{\"room_id\": \"{GameProperties.roomId}\"}}";
-        JObject reqJson = JObject.Parse(joinReq);
-        await GameSocketIO.so.EmitAsync($"{GameProperties.roomId}/room-event", reqJson);
-        Debug.Log(joinReq);*/
 
         GameSocketIO.EmitJoinRoom();
 
@@ -170,8 +165,10 @@ public class Client : MonoBehaviour
         client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
         var response = await client.GetAsync(url);
         Debug.Log(response.Content.ReadAsStringAsync().Result);
+
         CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
         RoomSettings roomset = JsonConvert.DeserializeObject<RoomSettings>(room.settings.ToString());
+
         GameProperties.isHardMode = roomset.difficulty == 1;
         Debug.Log($"[RoomInfo] Hardmode: {GameProperties.isHardMode}");
         GameProperties.numRounds = roomset.turns;
@@ -210,7 +207,7 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/start";
         Dictionary<string, string> content = await Post(url);
         string goesFirst = content["starts_with"];
-        GameComponents.meGoesFirst = goesFirst.Equals(GameComponents.me.uuid);
+        GameComponents.meGoesFirst = goesFirst.Trim().Equals(GameComponents.me.uuid);
         Debug.Log($"Start: {goesFirst}");
     }
 
