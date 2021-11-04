@@ -69,6 +69,7 @@ public class GameSocketIO : MonoBehaviour
 
     public static void ReceiveNote(string noteName)
     {
+        Debug.Log($"Received {noteName}");
         var notePlayer = new GameObject().AddComponent<ObjectClicker>();
         notePlayer.onNotePlay(noteName);
         if (!GameComponents.meGoesFirst) NotesReceiver.InputNote(noteName, false);

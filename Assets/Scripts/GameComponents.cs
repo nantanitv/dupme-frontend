@@ -61,7 +61,7 @@ public class GameComponents : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Debug.Log($"meGoesFirst {meGoesFirst}");
+        // Debug.Log($"meGoesFirst {meGoesFirst}");
     }
 
     private void FixedUpdate()
@@ -76,6 +76,7 @@ public class GameComponents : MonoBehaviour
     }
 
     #region Game Managers
+    /*
     public static void StartGame()
     {
         if (meGoesFirst)
@@ -88,7 +89,7 @@ public class GameComponents : MonoBehaviour
         Debug.Log($"[GameComp] Number of rounds: {GameProperties.numRounds}");
         Debug.Log($"[GameComp] Difficulty: {(GameProperties.isHardMode ? "Hard" : "Easy")}");
         Debug.Log($"[GameComp] Playable: {mePlayable}");
-    }
+    }*/
 
     public static void EndGame()
     {
@@ -110,8 +111,8 @@ public class GameComponents : MonoBehaviour
             if (timeLimit > 0) timeLimit -= Time.deltaTime;
             else
             {
-                EndMyTurn();
                 Debug.Log("[Time] Time's Up");
+                EndMyTurn();
             }
             if (numKeys == 0) EndMyTurn();
             yield return null;
@@ -139,19 +140,16 @@ public class GameComponents : MonoBehaviour
         }
 
         Debug.Log("[PlayLater] Done");
+
         int score = NotesReceiver.CalculateScore();
         them.score += score;
         GameSocketIO.EmitScore(score);
-        Debug.Log("[PlayLater] Score emitted");
-        NewRound();
-        if(currentRound < GameProperties.numRounds)
-        {
-            StartCoroutine(PlayFirst());
-        }
-        else
-        {
-            EndGame();
-        }
+        Debug.Log($"[PlayLater] Score emitted: {score}");
+
+        // NewRound();
+
+        if(currentRound < GameProperties.numRounds) StartCoroutine(PlayFirst());
+        else EndGame();
     }
 
     IEnumerator Wait()
@@ -160,24 +158,20 @@ public class GameComponents : MonoBehaviour
         meGoesFirst = false;
 
         while (!switchState) yield return null;
-
-        // yield return new WaitUntil(SwitchingState);
         switchState = false;
         Debug.Log("switchState switched back");
 
         if (meGoesFirst)
         {
             NewRound();
-            if (currentRound < GameProperties.numRounds)
+            if (currentRound < GameProperties.numRounds) StartCoroutine(Wait());
+            else
             {
-                StartCoroutine(Wait());
+                EndGame();
+                yield return null;
             }
-            else EndGame();
         }
-        else
-        {
-            StartCoroutine(PlayLater());
-        }
+        else StartCoroutine(PlayLater());
     }
 
     private bool SwitchingState()
@@ -207,7 +201,6 @@ public class GameComponents : MonoBehaviour
         timeIsRunning = false;
         mePlayable = false;
         Debug.Log("[GameComp] Turn Ended");
-        //GameSocket.SendScore(99);
     }
     #endregion
 
