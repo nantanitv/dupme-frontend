@@ -58,21 +58,45 @@ public class ObjectClicker : MonoBehaviour
     public AudioSource PBN5;
     public AudioSource PCN6;
 
-    private enum Voice
-    {
-        Piano,
-        EPiano,
-        Putter
-    }
-    private Voice voice;
+    public AudioSource ECN4;
+    public AudioSource ECS4;
+    public AudioSource EDN4;
+    public AudioSource EDS4;
+    public AudioSource EEN4;
+    public AudioSource EFN4;
+    public AudioSource EFS4;
+    public AudioSource EGN4;
+    public AudioSource EGS4;
+    public AudioSource EAN4;
+    public AudioSource EAS4;
+    public AudioSource EBN4;
+    public AudioSource ECN5;
+    public AudioSource ECS5;
+    public AudioSource EDN5;
+    public AudioSource EDS5;
+    public AudioSource EEN5;
+    public AudioSource EFN5;
+    public AudioSource EFS5;
+    public AudioSource EGN5;
+    public AudioSource EGS5;
+    public AudioSource EAN5;
+    public AudioSource EAS5;
+    public AudioSource EBN5;
+    public AudioSource ECN6;
 
+    public enum Voice
+    {
+        Piano, Epiano, Putter
+    }
+
+    public Voice voice;
 
     public string id;
 
     private void Start()
     {
-        voice = Voice.Putter;
-        GameEvents.current.onNoteClick += onNotePlay;
+        voice = Voice.Piano;
+        GameEvents.current.onNoteClick += OnNotePlay;
     }
 
     void Update()
@@ -87,17 +111,21 @@ public class ObjectClicker : MonoBehaviour
         }
     }
 
-    private void onNotePlay(string id)
+    public void OnNotePlay(string id)
     {
-        #region Play note sound
+        PlayNote(id);
+        GameSocketIO.EmitNote(id);
+    }
 
-        if(voice == Voice.Piano)
+    public void PlayNote(string id)
+    {
+        if (voice == Voice.Piano)
         {
             if (id == "CN4") CN4.Play();
-            else if (id == "CS4") CS4.Play();
             else if (id == "DN4") DN4.Play();
             else if (id == "DS4") DS4.Play();
             else if (id == "EN4") EN4.Play();
+            else if (id == "CS4") CS4.Play();
             else if (id == "FN4") FN4.Play();
             else if (id == "FS4") FS4.Play();
             else if (id == "GN4") GN4.Play();
@@ -119,13 +147,14 @@ public class ObjectClicker : MonoBehaviour
             else if (id == "AS5") AS5.Play();
             else if (id == "BN5") BN5.Play();
             else if (id == "CN6") CN6.Play();
-        } else if (voice == Voice.Putter)
+        }
+        else if (voice == Voice.Putter)
         {
             if (id == "CN4") PCN4.Play();
-            else if (id == "CS4") PCS4.Play();
             else if (id == "DN4") PDN4.Play();
             else if (id == "DS4") PDS4.Play();
             else if (id == "EN4") PEN4.Play();
+            else if (id == "CS4") PCS4.Play();
             else if (id == "FN4") PFN4.Play();
             else if (id == "FS4") PFS4.Play();
             else if (id == "GN4") PGN4.Play();
@@ -148,15 +177,55 @@ public class ObjectClicker : MonoBehaviour
             else if (id == "BN5") PBN5.Play();
             else if (id == "CN6") PCN6.Play();
         }
+        else if (voice == Voice.Epiano)
+        {
+            if (id == "CN4") ECN4.Play();
+            else if (id == "DN4") EDN4.Play();
+            else if (id == "DS4") EDS4.Play();
+            else if (id == "EN4") EEN4.Play();
+            else if (id == "CS4") ECS4.Play();
+            else if (id == "FN4") EFN4.Play();
+            else if (id == "FS4") EFS4.Play();
+            else if (id == "GN4") EGN4.Play();
+            else if (id == "GS4") EGS4.Play();
+            else if (id == "AN4") EAN4.Play();
+            else if (id == "AS4") EAS4.Play();
+            else if (id == "BN4") EBN4.Play();
 
+            else if (id == "CN5") ECN5.Play();
+            else if (id == "CS5") ECS5.Play();
+            else if (id == "DN5") EDN5.Play();
+            else if (id == "DS5") EDS5.Play();
+            else if (id == "EN5") EEN5.Play();
+            else if (id == "FN5") EFN5.Play();
+            else if (id == "FS5") EFS5.Play();
+            else if (id == "GN5") EGN5.Play();
+            else if (id == "GS5") EGS5.Play();
+            else if (id == "AN5") EAN5.Play();
+            else if (id == "AS5") EAS5.Play();
+            else if (id == "BN5") EBN5.Play();
+            else if (id == "CN6") ECN6.Play();
+        }
 
-        
-        #endregion
-
-        // GameSocket.SendNote(id);
-        NotesReceiver.InputNote(id, false);
-        // Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
+        Debug.Log("Valid Note");
         GameComponents.numKeys--;
         Debug.Log("[ObjClicker] Keys left: " + GameComponents.numKeys);
+        Debug.Log($"[ObjClicker] Pressed {id}");
+        if (!GameComponents.meGoesFirst) NotesReceiver.InputNote(id, true);
+    }
+
+    public void ChangeToPiano()
+    {
+        voice = Voice.Piano;
+    }
+
+    public void ChangeToPutter()
+    {
+        voice = Voice.Putter;
+    }
+
+    public void ChangeToEpiano()
+    {
+        voice = Voice.Epiano;
     }
 }

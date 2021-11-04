@@ -43,8 +43,9 @@ public class StartMenu : MonoBehaviour
         SceneManager.LoadScene("AdminMenu");
     }
 
-    public void GoToGame()
+    async public static void GoToGame()
     {
+        await Client.StartGame();
         if (GameProperties.isHardMode) SceneManager.LoadScene("HardMode");
         else SceneManager.LoadScene("EasyMode");
     }
@@ -74,9 +75,12 @@ public class StartMenu : MonoBehaviour
         if (input.Equals("ADMIN")) GoToAdminPanel();
         else
         {
-            GameProperties.roomId = input;
-            await Client.JoinRoom();
+            Debug.Log("Before lobby");
             GoToLobby();
+            GameProperties.roomId = input;
+            Debug.Log("Before JoinRoom");
+            await Client.JoinRoom();
+            
         }
     }
 

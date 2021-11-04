@@ -2,24 +2,43 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Net.Http;
+using System.Net.Http.Headers;
 using System;
 using UnityEngine;
 using UnityEngine.UI;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class Client : MonoBehaviour
 {
+    public class CreateRoomResponse
+    {
+        public string room_id { get; set; }
+        public string host { get; set; }
+        public IList<string> players { get; set; }
+        public object settings { get; set; }
+        public string status { get; set; }
+        public string time_created { get; set; }
+    }
+    public class RoomSettings
+    {
+        public int difficulty { get; set; }
+        public int levels { get; set; }
+        public int player_limit { get; set; }
+        public int turns { get; set; }
+    }
+
+    #region Attributes
     public static string URL_DEV_ = "https://dupme-backend-staging.herokuapp.com/";
     public static string URL_ = "https://dupme-backend.herokuapp.com/";
+
+    //public static string URL_DEV_ = "https://ktns.loca.lt/";
 
     public static string username = Environment.GetEnvironmentVariable("DUPME_AUTH_USERNAME");
     public static string uid = Environment.GetEnvironmentVariable("DUPME_AUTH_UID");
 
     public static string AUTH_TOKEN_;
-
-    private void Start()
-    {
-        
-    }
+    #endregion
 
     public void SetPlayerName(InputField inputName)
     {
@@ -75,30 +94,91 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "user/" + GameComponents.me.uuid + "/change?to=" + name;
         await Post(url);
     }
+
+    async public static Task<string> GetUserInfo(string uuid)
+    {
+        string url = URL_DEV_ + $"user/{uuid}/status";
+        Debug.Log($"[URL] {url}");
+
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+
+        var response = await client.GetAsync(url);
+        string content = response.Content.ReadAsStringAsync().Result;
+
+        JObject user = JObject.Parse(content);
+        return user["username"].ToString();
+    }
+
+    async public static Task<string> GetAllUsers()
+    {
+        string url = $"{URL_DEV_}user/all";
+        Debug.Log($"[URL] {url}");
+
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+
+        var response = await client.GetAsync(url);
+        string content = response.Content.ReadAsStringAsync().Result;
+        Debug.Log($"[GetAllUsers] {content}");
+
+        return content;
+    }
     #endregion
 
     #region Room Requests
     async public static Task CreateRoom()
     {
-        string url = 
-            URL_DEV_ + "create-room?uuid=" + GameComponents.me.uuid + 
-            "&difficulty=" + (GameProperties.isHardMode ? "1" : "0") + 
-            "&turns=" + GameProperties.numRounds;
-        Dictionary<string, string> content = await Post(url);
-        GameProperties.roomId = content["room_id"];
-        Debug.Log("[CreateRoom] Room ID: " + GameProperties.roomId);
+        string url = $"{URL_DEV_}create-room?uuid={GameComponents.me.uuid}&difficulty={(GameProperties.isHardMode ? "1" : "0")}&turns={GameProperties.numRounds}";
+        using var client = new HttpClient();
+        Debug.Log($"[URL] {url}");
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+        var response = await client.PostAsync(url, null);
+        Debug.Log($"[POST] Status {response.StatusCode}");
+
+        CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
+        GameProperties.roomId = room.room_id;
+        Debug.Log($"[CreateRoom] Room ID: {GameProperties.roomId}");
     }
 
     async public static Task JoinRoom()
     {
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/join?uuid=" + GameComponents.me.uuid;
         await Post(url);
+        Debug.Log($"[JoinRoom]: Joined");
+
+        GameSocketIO.EmitJoinRoom();
+
+        CreateRoomResponse room = await GetRoomInfo();
+        var players = room.players;
+        GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? await GetUserInfo(players[1]) : await GetUserInfo(players[0]);
+    }
+
+    async public static Task<CreateRoomResponse> GetRoomInfo()
+    {
+        string url = $"{URL_DEV_}room/{GameProperties.roomId}/status";
+        using var client = new HttpClient();
+        Debug.Log("[URL] " + url);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+        var response = await client.GetAsync(url);
+        Debug.Log(response.Content.ReadAsStringAsync().Result);
+
+        CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
+        RoomSettings roomset = JsonConvert.DeserializeObject<RoomSettings>(room.settings.ToString());
+
+        GameProperties.isHardMode = roomset.difficulty == 1;
+        Debug.Log($"[RoomInfo] Hardmode: {GameProperties.isHardMode}");
+        GameProperties.numRounds = roomset.turns;
+        return room;
     }
 
     async public static Task KickUser()
     {
-        string url = URL_DEV_ + "room/" + GameProperties.roomId + "/kick";
+        string url = URL_DEV_ + "room/" + GameProperties.roomId + $"/kick?uuid={GameComponents.me.uuid}";
         await Post(url);
+        GameSocketIO.EmitLeaveRoom();
     }
 
     async public static Task CloseRoom()
@@ -123,9 +203,28 @@ public class Client : MonoBehaviour
     #region Game Requests
     async public static Task StartGame()
     {
+        /*
+        string url = $"{URL_DEV_}room/{GameProperties.roomId}/status";
+        using var client = new HttpClient();
+        Debug.Log("[URL] " + url);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+        var response = await client.GetAsync(url);
+        Debug.Log(response.Content.ReadAsStringAsync().Result);
+
+        CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
+        var theirUuid = room.players[0].Equals(GameComponents.me.uuid) ? room.players[1] : room.players[0];
+        GameComponents.them.uuid = theirUuid;
+        Debug.Log("UUID: " + theirUuid);
+        var theirName = GetUserInfo(theirUuid).Result;
+        GameComponents.them.name = theirName;
+        Debug.Log("Name: " + theirName);*/
+
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/start";
         Dictionary<string, string> content = await Post(url);
-        GameComponents.meGoesFirst = content["starts_with"].Equals(GameComponents.me.uuid);
+        string goesFirst = content["starts_with"];
+        GameComponents.meGoesFirst = goesFirst.Trim().Equals(GameComponents.me.uuid);
+        Debug.Log($"Start: {goesFirst}");
     }
 
     async public static Task EndGame()
@@ -141,7 +240,7 @@ public class Client : MonoBehaviour
         using var client = new HttpClient();
         Debug.Log("[URL] " + url);
 
-        client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
         var response = await client.PostAsync(url, null);
 
         Dictionary<string, string> content = ContentToDictAsync(response.Content);

@@ -6,20 +6,19 @@ using UnityEngine.UI;
 public class MessageManager : MonoBehaviour
 {
     public string username;
-
+    public static bool chatNotification;
+    public static string incomingText;
     public int maxMessages = 25;
-
     public GameObject chatPanel, textObject;
-
     public InputField chatbox;
 
     [SerializeField]
     List<Message> messageList = new List<Message>();
     void Start()
     {
-        
+        username = GameComponents.me.name;
+        chatNotification = false;
     }
-
 
     void Update()
     {
@@ -28,9 +27,11 @@ public class MessageManager : MonoBehaviour
             if(Input.GetKeyDown(KeyCode.Return))
             {
                 SendMessageToChat(username + ": " + chatbox.text);
+                GameSocketIO.EmitChat(chatbox.text);
                 chatbox.text = "";
             }
-        } else
+        } 
+        else
         {
             if(!chatbox.isFocused && Input.GetKeyDown(KeyCode.Return))
             {
@@ -43,11 +44,15 @@ public class MessageManager : MonoBehaviour
             if (Input.GetKeyDown(KeyCode.Space))
             {
                 SendMessageToChat("Space bar pressed");
-
             }
         }
-
         
+        if (chatNotification)
+        {
+            SendMessageToChat(GameComponents.them.name + ": " + incomingText);
+            chatNotification = false;
+            incomingText = "";
+        }
     }
 
     public void SendMessageToChat(string text)
@@ -59,15 +64,10 @@ public class MessageManager : MonoBehaviour
         }
 
         Message newMessage = new Message();
-
         newMessage.text = text;
-
         GameObject newText = Instantiate(textObject, chatPanel.transform);
-
         newMessage.textObject = newText.GetComponent<Text>();
-
         newMessage.textObject.text = newMessage.text;
-
 
         messageList.Add(newMessage);
     }

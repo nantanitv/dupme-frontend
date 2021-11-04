@@ -4,26 +4,30 @@ using UnityEngine;
 
 public class NotesReceiver
 {
-    static List<string> notesEasy = new List<string>() { "CN4", "CS4", "DN4", "DS4", "EN4", "FN4", "FS4", "GN4", "GS4", "AN4", "AS4", "BN4", "CN5" };
-    static List<string> notesHard = new List<string>() { "CS5", "DN5", "DS5", "EN5", "FN5", "FS5", "GN5", "GS5", "AN5", "AS5", "BN5", "CN6" };
+    static readonly List<string> notesEasy = new List<string>() { "CN4", "CS4", "DN4", "DS4", "EN4", "FN4", "FS4", "GN4", "GS4", "AN4", "AS4", "BN4", "CN5" };
+    static readonly List<string> notesHard = new List<string>() { "CS5", "DN5", "DS5", "EN5", "FN5", "FS5", "GN5", "GS5", "AN5", "AS5", "BN5", "CN6" };
     static List<string> correctSequence;   // List of notes coming from the first player
     static List<string> replySequence;     // List of "answer" notes
 
+    public static ObjectClicker oc;
+
     public static void ResetSequences()
     {
-        correctSequence = new List<string>() {  };
-        replySequence = new List<string>() {  };
+        correctSequence = new List<string>();
+        replySequence = new List<string>();
     }
 
     // Put a note in the corresponding list
     // isReply: Incoming note = false, Reply note = true
     public static void InputNote(string n, bool isReply)
     {
-        if (NoteIsValid(n))
-        {
-            if (!isReply) correctSequence.Add(n);
-            else replySequence.Add(n);
-        }
+        Debug.Log("[InputNote] Started");
+        // if (NoteIsValid(n))
+        // {
+        Debug.Log("[InputNote] " + n);
+        if (!isReply) correctSequence.Add(n);
+        else replySequence.Add(n);
+        // }
     }
 
     // Check validity of the note value `n` to prevent processing other object names
@@ -39,21 +43,22 @@ public class NotesReceiver
     // Count the number of correct valid notes
     public static int CalculateScore()
     {
+        Debug.Log("Calculating Score");
         int score = 0;
-        while (correctSequence.Count > 0)
+        while (correctSequence.Count > 0 && replySequence.Count > 0)
         {
-            int score = 0;
-            bool scorable = true;
-            while (correctSequence.Count > 0 && scorable)
+            Debug.Log("Loop");
+            if (NoteMatched(correctSequence[0], replySequence[0]))
             {
-                if (noteMatched(correctSequence[0], replySequence[0])) ++score;
-                else if (!noteMatched(correctSequence[0], replySequence[0])) scorable = false;
-                if (replySequence.Count == 0) break;
-                correctSequence.RemoveAt(0);
-                replySequence.RemoveAt(0);
+                ++score;
+                Debug.Log("Matched: " + score);
             }
-            return score;
+            correctSequence.RemoveAt(0);
+            Debug.Log("Removed Correct");
+            replySequence.RemoveAt(0);
+            Debug.Log("Removed Reply");
         }
+        Debug.Log("Calculated score");
         return score;
     }
 

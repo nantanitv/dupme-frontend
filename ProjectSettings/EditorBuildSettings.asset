@@ -6,6 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
+    path: Assets/Scenes/SetNameMenu.unity
+    guid: 3bee12ae6aeb9274ab3fc5ad30f60bec
+  - enabled: 1
     path: Assets/Scenes/StartMenu.unity
     guid: 64264a18e7ca0fc499178bcec204bbc8
   - enabled: 1
@@ -18,9 +21,6 @@ EditorBuildSettings:
     path: Assets/Scenes/CreateRoomMenu.unity
     guid: af074d99cd9a931429fd88a6a47e4020
   - enabled: 1
-    path: Assets/Scenes/EasyMode.unity
-    guid: 7db1effe1b22f264a8c1af065b89a8e8
-  - enabled: 1
     path: Assets/Scenes/HardMode.unity
     guid: 09513dbf86f555c44abdf52d8a5ec3d2
   - enabled: 1
@@ -29,4 +29,10 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AdminMenu.unity
     guid: 97880cb67773f784d980aad1a4c1d1b3
+  - enabled: 1
+    path: Assets/Scenes/Results.unity
+    guid: 5197b958dac82d945b4d3e63e314a1af
+  - enabled: 1
+    path: Assets/Scenes/EasyMode.unity
+    guid: 54ff23e178441f64eb84f84ba23c3cf1
   m_configObjects: {}
