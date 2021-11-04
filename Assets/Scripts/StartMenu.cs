@@ -43,8 +43,9 @@ public class StartMenu : MonoBehaviour
         SceneManager.LoadScene("AdminMenu");
     }
 
-    public void GoToGame()
+    async public void GoToGame()
     {
+        await Client.StartGame();
         if (GameProperties.isHardMode) SceneManager.LoadScene("HardMode");
         else SceneManager.LoadScene("EasyMode");
     }

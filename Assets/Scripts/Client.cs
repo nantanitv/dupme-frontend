@@ -31,8 +31,10 @@ public class Client : MonoBehaviour
     public static string URL_DEV_ = "https://dupme-backend-staging.herokuapp.com/";
     public static string URL_ = "https://dupme-backend.herokuapp.com/";
 
-    public static string username = Environment.GetEnvironmentVariable("DUPME_AUTH_USERNAME");
-    public static string uid = Environment.GetEnvironmentVariable("DUPME_AUTH_UID");
+    // public static string username = Environment.GetEnvironmentVariable("DUPME_AUTH_USERNAME");
+    // public static string uid = Environment.GetEnvironmentVariable("DUPME_AUTH_UID");
+    public static string username = "admin@dupme.dupme";
+    public static string uid = "4yRoC62AeVUIPkTqdMewUfRr5JI2";
 
     public static string AUTH_TOKEN_;
     #endregion
@@ -111,7 +113,6 @@ public class Client : MonoBehaviour
         Debug.Log($"[POST] Status {response.StatusCode}");
 
         CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
-        Debug.Log($"{GameProperties.roomId}");
         GameProperties.roomId = room.room_id;
         Debug.Log($"[CreateRoom] Room ID: {GameProperties.roomId}");
 
@@ -173,7 +174,9 @@ public class Client : MonoBehaviour
     {
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/start";
         Dictionary<string, string> content = await Post(url);
-        GameComponents.meGoesFirst = content["starts_with"].Equals(GameComponents.me.uuid);
+        string goesFirst = content["starts_with"];
+        GameComponents.meGoesFirst = goesFirst.Equals(GameComponents.me.uuid);
+        Debug.Log($"Start: {goesFirst}");
     }
 
     async public static Task EndGame()

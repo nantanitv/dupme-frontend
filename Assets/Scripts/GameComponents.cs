@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Timers;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class GameComponents : MonoBehaviour
 {
@@ -42,39 +43,38 @@ public class GameComponents : MonoBehaviour
 
     public static Player me = new Player("", "Alice");
     public static Player them = new Player("", "Bobby");
+
+    public Text roundsText;
+    public Text numKeysText;
     #endregion
 
     // Start is called before the first frame update
     void Start()
     {
         meGoesFirst = true;
+        if (meGoesFirst) StartCoroutine(PlayFirst());
+        else StartCoroutine(Wait());
+        /*
         while (currentRound < GameProperties.numRounds)
         {
             NewRound();
             if (meGoesFirst)
             {
                 StartCoroutine(PlayFirst());
-                GameSocketIO.SendEndSequence();
-                StartCoroutine(Wait());
-                switchState = false;
             }
             else
             {
                 StartCoroutine(Wait());
-                switchState = false;
-                StartCoroutine(PlayLater());
-                int score = NotesReceiver.CalculateScore();
-                them.score += score;
-                GameSocketIO.SendScore(score);
             }
         }
-        EndGame();
+        EndGame();*/
     }
 
     // Update is called once per frame
     void Update()
     {
-
+        roundsText.text = $"Round {currentRound}/{GameProperties.numRounds}";
+        numKeysText.text = $"Keys Left: {numKeys}";
     }
 
     private void FixedUpdate()
@@ -95,7 +95,6 @@ public class GameComponents : MonoBehaviour
             me.isTurn = true;
             mePlayable = true;
         }
-        NewRound();
 
         Debug.Log($"[GameComp] The game has started. Players: {me.name} vs {them.name}");
         Debug.Log($"[GameComp] Number of rounds: {GameProperties.numRounds}");
@@ -115,6 +114,7 @@ public class GameComponents : MonoBehaviour
     #region Turn/Round Managers
     IEnumerator PlayFirst()
     {
+        NewRound();
         StartMyTurn();
 
         while (timeIsRunning && mePlayable)
@@ -128,8 +128,9 @@ public class GameComponents : MonoBehaviour
             if (numKeys == 0) EndMyTurn();
             yield return null;
         }
-
+        GameSocketIO.SendEndSequence();
         Debug.Log("[PlayFirst] Done");
+        StartCoroutine(Wait());
     }
 
     IEnumerator PlayLater()
@@ -149,11 +150,38 @@ public class GameComponents : MonoBehaviour
         }
 
         Debug.Log("[PlayLater] Done");
+        int score = NotesReceiver.CalculateScore();
+        them.score += score;
+        GameSocketIO.SendScore(score);
+
+        NewRound();
+        if(currentRound < GameProperties.numRounds)
+        {
+            StartCoroutine(PlayFirst());
+        }
+        else
+        {
+            StartCoroutine(Wait());
+        }
     }
 
     IEnumerator Wait()
     {
         yield return new WaitUntil(SwitchingState);
+        switchState = false;
+
+        if (meGoesFirst)
+        {
+            NewRound();
+            if (currentRound < GameProperties.numRounds)
+            {
+                StartCoroutine(Wait());
+            }
+        }
+        else
+        {
+            StartCoroutine(PlayLater());
+        }
     }
 
     private bool SwitchingState()
