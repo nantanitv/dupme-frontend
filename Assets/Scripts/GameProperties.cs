@@ -8,6 +8,7 @@ public class GameProperties : MonoBehaviour
     public static bool isHardMode = false;
     public static int numRounds = 2;
     public static string roomId;
+    public Toggle hard;
 
     // Set number of rounds (2*turns) in Create Menu
     public void SetNumRounds(InputField newNumRounds)
@@ -20,7 +21,8 @@ public class GameProperties : MonoBehaviour
     // Toggle Hard/Easy mode in Create Menu
     public void ToggleHardMode()
     {
-        isHardMode = !isHardMode;
+        isHardMode = hard.isOn;
+        // isHardMode = !isHardMode;
         Debug.Log("Hard Mode: " + isHardMode);
     }
 }
