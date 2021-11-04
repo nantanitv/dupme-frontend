@@ -7,6 +7,7 @@ using System;
 using UnityEngine;
 using UnityEngine.UI;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class Client : MonoBehaviour
 {
@@ -138,7 +139,8 @@ public class Client : MonoBehaviour
         await Post(url);
         Debug.Log($"[JoinRoom]: Joined");
         string joinReq = $"{{\"room_id\": \"{GameProperties.roomId}\"}}";
-        await GameSocketIO.so.EmitAsync("join-room", new JSONObject(joinReq));
+        JObject reqJson = JObject.Parse(joinReq);
+        await GameSocketIO.so.EmitAsync("join-room", reqJson);
         Debug.Log(joinReq);
         CreateRoomResponse room = await GetRoomInfo();
         var players = room.players;

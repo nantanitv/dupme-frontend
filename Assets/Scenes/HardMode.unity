@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.4514032, g: 0.5008929, b: 0.57231516, a: 1}
+  m_IndirectSpecularColor: {r: 0.45140398, g: 0.5008938, b: 0.5723168, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -3190,6 +3190,7 @@ GameObject:
   - component: {fileID: 533758086}
   - component: {fileID: 533758085}
   - component: {fileID: 533758084}
+  - component: {fileID: 533758089}
   m_Layer: 5
   m_Name: Pause Canvas
   m_TagString: Untagged
@@ -3303,6 +3304,18 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &533758089
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 533758083}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5a0e5254b7ea8244aaad3bb6f60f2327, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &545640417
 GameObject:
   m_ObjectHideFlags: 0
@@ -4646,8 +4659,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 533758084}
-        m_TargetAssemblyTypeName: PauseMenu, Assembly-CSharp
+      - m_Target: {fileID: 533758089}
+        m_TargetAssemblyTypeName: StartMenu, Assembly-CSharp
         m_MethodName: QuitGame
         m_Mode: 1
         m_Arguments:
@@ -9130,7 +9143,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: 0.000025749207, y: -0.0000076293945}
+  m_AnchoredPosition: {x: 2.979987, y: -0.0000076293945}
   m_SizeDelta: {x: -2.9799957, y: 0}
   m_Pivot: {x: 0, y: 0}
 --- !u!114 &1661009630
