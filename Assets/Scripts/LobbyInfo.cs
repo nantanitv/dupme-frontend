@@ -40,16 +40,19 @@ public class LobbyInfo : MonoBehaviour
                 Debug.Log("Going to game");
                 Debug.Log($"hardmode {GameProperties.isHardMode}");
                 readyToLoad = true;
+                GameSocketIO.so.EmitAsync("message", $"NAME{GameComponents.me.name}");
             }
         });
 
         GameSocketIO.so.On($"{GameProperties.roomId}/message", response =>
         {
+            Debug.Log(response);
+
             string content = response.GetValue<string>();
-            Debug.Log($"Room message: {content}");
-            if (NotesReceiver.NoteIsValid(content)) GameSocketIO.ReceiveNote(content);
-            else if (content.StartsWith("S") && content.EndsWith("S")) GameSocketIO.ReceiveScore(content);
-            else if (content.Equals("ENDSQ")) GameSocketIO.ReceiveEndSequence();
+
+            if (content.Equals("ENDSEQ")) GameSocketIO.ReceiveEndSequence();
+            else if (content.StartsWith("SCORE")) GameSocketIO.ReceiveScore(content);
+            else if (NotesReceiver.NoteIsValid(content)) GameSocketIO.ReceiveNote(content);
         });
     }
 

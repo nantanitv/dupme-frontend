@@ -13,8 +13,8 @@ public class NotesReceiver
 
     public static void ResetSequences()
     {
-        correctSequence = new List<string>() {  };
-        replySequence = new List<string>() {  };
+        correctSequence = new List<string>();
+        replySequence = new List<string>();
     }
 
     // Put a note in the corresponding list
@@ -43,14 +43,22 @@ public class NotesReceiver
     // Count the number of correct valid notes
     public static int CalculateScore()
     {
+        Debug.Log("Calculating Score");
         int score = 0;
-        while (correctSequence.Count > 0)
+        while (correctSequence.Count > 0 && replySequence.Count > 0)
         {
-            if (NoteMatched(correctSequence[0], replySequence[0])) ++score;
-            if (replySequence.Count == 0) break;
+            Debug.Log("Loop");
+            if (NoteMatched(correctSequence[0], replySequence[0]))
+            {
+                ++score;
+                Debug.Log("Matched: " + score);
+            }
             correctSequence.RemoveAt(0);
+            Debug.Log("Removed Correct");
             replySequence.RemoveAt(0);
+            Debug.Log("Removed Reply");
         }
+        Debug.Log("Calculated score");
         return score;
     }
 

@@ -13,6 +13,8 @@ public class PauseMenu : MonoBehaviour
     public Text numRoundText;
     public Text keysLeftText;
     public Text timeText;
+    public Text noteText;
+    public static string toShow;
 
     // Initialize variable states
     void Start()
@@ -25,7 +27,8 @@ public class PauseMenu : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        playerOneText.text = $"{GameComponents.me.name}: {GameComponents.me.score}";
+        noteText.text = toShow;
+        playerOneText.text = $"{GameComponents.me.name} (You): {GameComponents.me.score}";
         playerTwoText.text = $"{GameComponents.them.name}: {GameComponents.them.score}";
         if (Input.GetKeyDown(KeyCode.Escape))
         {

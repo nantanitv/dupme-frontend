@@ -142,13 +142,13 @@ public class GameComponents : MonoBehaviour
         Debug.Log("[PlayLater] Done");
 
         int score = NotesReceiver.CalculateScore();
-        them.score += score;
+        me.score += score;
         GameSocketIO.EmitScore(score);
         Debug.Log($"[PlayLater] Score emitted: {score}");
 
         // NewRound();
 
-        if(currentRound < GameProperties.numRounds) StartCoroutine(PlayFirst());
+        if(currentRound <= GameProperties.numRounds) StartCoroutine(PlayFirst());
         else EndGame();
     }
 
@@ -164,7 +164,7 @@ public class GameComponents : MonoBehaviour
         if (meGoesFirst)
         {
             NewRound();
-            if (currentRound < GameProperties.numRounds) StartCoroutine(Wait());
+            if (currentRound <= GameProperties.numRounds) StartCoroutine(Wait());
             else
             {
                 EndGame();

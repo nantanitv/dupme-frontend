@@ -203,13 +203,28 @@ public class Client : MonoBehaviour
     #region Game Requests
     async public static Task StartGame()
     {
+        /*
+        string url = $"{URL_DEV_}room/{GameProperties.roomId}/status";
+        using var client = new HttpClient();
+        Debug.Log("[URL] " + url);
+
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+        var response = await client.GetAsync(url);
+        Debug.Log(response.Content.ReadAsStringAsync().Result);
+
+        CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
+        var theirUuid = room.players[0].Equals(GameComponents.me.uuid) ? room.players[1] : room.players[0];
+        GameComponents.them.uuid = theirUuid;
+        Debug.Log("UUID: " + theirUuid);
+        var theirName = GetUserInfo(theirUuid).Result;
+        GameComponents.them.name = theirName;
+        Debug.Log("Name: " + theirName);*/
+
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/start";
         Dictionary<string, string> content = await Post(url);
         string goesFirst = content["starts_with"];
         GameComponents.meGoesFirst = goesFirst.Trim().Equals(GameComponents.me.uuid);
         Debug.Log($"Start: {goesFirst}");
-
-        // await GameSocketIO.so.EmitAsync("message", GameComponents.meGoesFirst ? "START0" : "START1"); // START0: me goes first, START1: they go first
     }
 
     async public static Task EndGame()

@@ -32,12 +32,4 @@ public class DisplayOnlinePlayers : MonoBehaviour
         }
         
     }
-
-    // Update is called once per frame
-    async void Update()
-    {
-        
-        //new WaitForSeconds(1);
-        //onlineUsers.text = await Client.GetAllUsers();
-    }
 }
