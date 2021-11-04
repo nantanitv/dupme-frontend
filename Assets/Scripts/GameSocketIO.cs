@@ -27,13 +27,13 @@ public class GameSocketIO : MonoBehaviour
 
         so.On("message", response =>
         {
-            // Debug.Log(response);
+            Debug.Log(response);
 
             string content = response.GetValue<string>();
             // Debug.Log(content);
 
             if (content.Equals("ENDSEQ")) ReceiveEndSequence();
-            else if (content.StartsWith("S") && content.EndsWith("S")) ReceiveScore(content);
+            else if (content.StartsWith("SCORE")) ReceiveScore(content);
             else if (NotesReceiver.NoteIsValid(content)) ReceiveNote(content);
             // else if (content.Equals("START1")) GameComponents.meGoesFirst = true;
             // else if (content.Equals("START0")) GameComponents.meGoesFirst = false;
@@ -77,12 +77,13 @@ public class GameSocketIO : MonoBehaviour
 
     public static void EmitScore(int score)
     {
-        so.EmitAsync("message", $"S{score}S");
+        so.EmitAsync("message", $"SCORE{score}");
     }
 
     public static void ReceiveScore(string score)
     {
-        int realScore = int.Parse(score.Replace("S", ""));
+        int realScore = int.Parse(score.Replace("SCORE", ""));
+        Debug.Log($"Received Score: {realScore}");
         GameComponents.them.score += realScore;
         GameComponents.switchState = true;
     }
