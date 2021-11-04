@@ -26,6 +26,8 @@ public class GameSocketIO : MonoBehaviour
         so.On("room-event", response =>
         {
             Debug.Log(response);
+            var content = response.GetValue<Dictionary<string,string>>();
+            Debug.Log(content["event"]);
             // string ev = response.GetValue<string>();
             // if (ev.Equals("start_game")) GameComponents.StartGame();
         });

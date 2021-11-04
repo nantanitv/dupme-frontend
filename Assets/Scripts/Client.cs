@@ -10,7 +10,7 @@ using Newtonsoft.Json;
 
 public class Client : MonoBehaviour
 {
-    class CreateRoomResponse
+    public class CreateRoomResponse
     {
         public string room_id { get; set; }
         public string host { get; set; }
@@ -19,7 +19,7 @@ public class Client : MonoBehaviour
         public string status { get; set; }
         public string time_created { get; set; }
     }
-    class RoomSettings
+    public class RoomSettings
     {
         public int difficulty { get; set; }
         public int levels { get; set; }
@@ -96,8 +96,23 @@ public class Client : MonoBehaviour
 
     async public static Task<string> GetUserInfo(string uuid)
     {
-        string url = URL_DEV_ + $"/user/{uuid}/status";
+        string url = URL_DEV_ + $"user/{uuid}/status";
         return (await Post(url))["username"];
+    }
+
+    async public static Task<string> GetAllUsers()
+    {
+        string url = $"{URL_DEV_}user/all";
+        Debug.Log($"[URL] {url}");
+
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+
+        var response = await client.GetAsync(url);
+        string content = response.Content.ReadAsStringAsync().Result;
+        Debug.Log($"[GetAllUsers] {content}");
+
+        return content;
     }
     #endregion
 
@@ -115,9 +130,6 @@ public class Client : MonoBehaviour
         CreateRoomResponse room = JsonConvert.DeserializeObject<CreateRoomResponse>(response.Content.ReadAsStringAsync().Result);
         GameProperties.roomId = room.room_id;
         Debug.Log($"[CreateRoom] Room ID: {GameProperties.roomId}");
-
-        var players = room.players;
-        GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? players[1] : players[2];
     }
 
     async public static Task JoinRoom()
@@ -125,11 +137,13 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/join?uuid=" + GameComponents.me.uuid;
         await Post(url);
         Debug.Log($"[JoinRoom]: Joined");
-        await GetRoomInfo();
+        CreateRoomResponse room = await GetRoomInfo();
+        var players = room.players;
+        GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? players[1] : players[2];
         GameSocketIO.EmitJoinRoom();
     }
 
-    async public static Task GetRoomInfo()
+    async public static Task<CreateRoomResponse> GetRoomInfo()
     {
         string url = $"{URL_DEV_}room/{GameProperties.roomId}/status";
         using var client = new HttpClient();
@@ -143,6 +157,7 @@ public class Client : MonoBehaviour
         GameProperties.isHardMode = roomset.difficulty == 1;
         Debug.Log($"[RoomInfo] Hardmode: {GameProperties.isHardMode}");
         GameProperties.numRounds = roomset.turns;
+        return room;
     }
 
     async public static Task KickUser()

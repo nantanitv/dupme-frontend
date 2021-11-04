@@ -516,7 +516,7 @@ GameObject:
   - component: {fileID: 825918245}
   - component: {fileID: 825918244}
   m_Layer: 5
-  m_Name: Online Players
+  m_Name: Online Players Title
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -611,7 +611,7 @@ GameObject:
   - component: {fileID: 1122568854}
   - component: {fileID: 1122568853}
   m_Layer: 5
-  m_Name: Online Players (1)
+  m_Name: Online Players List
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -855,6 +855,7 @@ GameObject:
   - component: {fileID: 1786407742}
   - component: {fileID: 1786407741}
   - component: {fileID: 1786407745}
+  - component: {fileID: 1786407746}
   m_Layer: 5
   m_Name: Canvas
   m_TagString: Untagged
@@ -959,6 +960,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5a0e5254b7ea8244aaad3bb6f60f2327, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1786407746
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1786407740}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8bfc6f0166e57a742a3ba9688a5d41da, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  onlineUsers: {fileID: 1122568854}
 --- !u!1 &1907416825
 GameObject:
   m_ObjectHideFlags: 0
