@@ -138,8 +138,8 @@ public class GameComponents : MonoBehaviour
             if (timeLimit > 0) timeLimit -= Time.deltaTime;
             else
             {
-                EndMyTurn();
                 Debug.Log("[Time] Time's Up");
+                EndMyTurn();
             }
             if (numKeys == 0) EndMyTurn();
             yield return null;
@@ -152,8 +152,6 @@ public class GameComponents : MonoBehaviour
         GameSocketIO.EmitScore(score);
         Debug.Log($"[PlayLater] Score emitted: {score}");
 
-        // NewRound();
-
         if(currentRound <= GameProperties.numRounds) StartCoroutine(PlayFirst());
         else EndGame();
     }
@@ -163,7 +161,7 @@ public class GameComponents : MonoBehaviour
         if (!meGoesFirst) NewRound();
         meGoesFirst = false;
 
-        while (!switchState) yield return null;
+        while (!switchState) yield return new WaitForSeconds(0.2f);
         switchState = false;
         Debug.Log("switchState switched back");
 
@@ -178,11 +176,6 @@ public class GameComponents : MonoBehaviour
             }
         }
         else StartCoroutine(PlayLater());
-    }
-
-    private bool SwitchingState()
-    {
-        return switchState;
     }
 
     public static void NewRound()
