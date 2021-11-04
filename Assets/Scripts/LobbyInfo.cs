@@ -26,18 +26,16 @@ public class LobbyInfo : MonoBehaviour
             Debug.Log(response);
 
             var content = response.GetValue();
-            Debug.Log(content.ToString());
+            string json = content.ToString();
+            Debug.Log(json);
 
-            JObject contentObj = JObject.Parse(response.GetValue<string>());
-            var theirUuid = contentObj["data"]["uuid"];
-            GameComponents.them.uuid = theirUuid.ToString();
-            var theirName = Client.GetUserInfo(GameComponents.them.uuid);
-            GameComponents.them.name = theirName.Result;
+            JObject jsonObj = JObject.Parse(json);
+            string eventName = jsonObj["event"].ToString();
 
-            if (content.ToString().Contains("start_game"))
+            if (eventName.Equals("start_game"))
             {
-                string startsWith = contentObj["data"]["starts_with"].ToString();
-                Debug.Log(startsWith);
+                Debug.Log("Starting game");
+                string startsWith = jsonObj["data"]["starts_with"].ToString();
                 GameComponents.meGoesFirst = startsWith.Equals(GameComponents.me.uuid);
                 Debug.Log("Going to game");
                 Debug.Log($"hardmode {GameProperties.isHardMode}");
