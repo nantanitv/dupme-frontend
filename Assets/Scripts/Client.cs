@@ -139,7 +139,7 @@ public class Client : MonoBehaviour
         Debug.Log($"[JoinRoom]: Joined");
         CreateRoomResponse room = await GetRoomInfo();
         var players = room.players;
-        GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? players[1] : players[2];
+        GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? await GetUserInfo(players[1]) : await GetUserInfo(players[2]);
         GameSocketIO.EmitJoinRoom();
     }
 
