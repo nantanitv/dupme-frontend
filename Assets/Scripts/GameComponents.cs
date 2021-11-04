@@ -128,7 +128,7 @@ public class GameComponents : MonoBehaviour
             if (numKeys == 0) EndMyTurn();
             yield return null;
         }
-        GameSocketIO.SendEndSequence();
+        GameSocketIO.EmitEndSequence();
         Debug.Log("[PlayFirst] Done");
         StartCoroutine(Wait());
     }
@@ -152,7 +152,7 @@ public class GameComponents : MonoBehaviour
         Debug.Log("[PlayLater] Done");
         int score = NotesReceiver.CalculateScore();
         them.score += score;
-        GameSocketIO.SendScore(score);
+        GameSocketIO.EmitScore(score);
 
         NewRound();
         if(currentRound < GameProperties.numRounds)

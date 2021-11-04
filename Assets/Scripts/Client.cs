@@ -126,6 +126,7 @@ public class Client : MonoBehaviour
         await Post(url);
         Debug.Log($"[JoinRoom]: Joined");
         await GetRoomInfo();
+        GameSocketIO.EmitJoinRoom();
     }
 
     async public static Task GetRoomInfo()
@@ -146,8 +147,9 @@ public class Client : MonoBehaviour
 
     async public static Task KickUser()
     {
-        string url = URL_DEV_ + "room/" + GameProperties.roomId + "/kick";
+        string url = URL_DEV_ + "room/" + GameProperties.roomId + $"/kick?uuid={GameComponents.me.uuid}";
         await Post(url);
+        GameSocketIO.EmitLeaveRoom();
     }
 
     async public static Task CloseRoom()

@@ -50,12 +50,22 @@ public class GameSocketIO : MonoBehaviour
         await so.EmitAsync("message", "deez nutz");
     }
 
-    public static void SendNote(string noteName)
+    public static void EmitJoinRoom()
+    {
+        so.EmitAsync("join-room", new JSONObject($"{{\"room_id\": {GameProperties.roomId}"));
+    }
+
+    public static void EmitLeaveRoom()
+    {
+        so.EmitAsync("leave-room", new JSONObject($"{{\"room_id\": {GameProperties.roomId}"));
+    }
+
+    public static void EmitNote(string noteName)
     {
         so.EmitAsync("message", noteName);
     }
 
-    public static void SendEndSequence()
+    public static void EmitEndSequence()
     {
         so.EmitAsync("message", "ENDSEQ");
     }
@@ -67,7 +77,7 @@ public class GameSocketIO : MonoBehaviour
         if (!GameComponents.meGoesFirst) NotesReceiver.InputNote(noteName, false);
     }
 
-    public static void SendScore(int score)
+    public static void EmitScore(int score)
     {
         so.EmitAsync("message", $"S{score}S");
     }
