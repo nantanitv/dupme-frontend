@@ -86,10 +86,10 @@ public class ObjectClicker : MonoBehaviour
         else if (id == "CN6") CN6.Play();
         #endregion
 
-        
+
         // separate into new fn
-        // GameSocket.SendNote(id);
-        NotesReceiver.InputNote(id, false);
+        GameSocketIO.EmitNote(id);
+        // NotesReceiver.InputNote(id, false);
         // Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
         if (NotesReceiver.NoteIsValid(id))
         {

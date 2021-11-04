@@ -51,7 +51,6 @@ public class GameComponents : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        meGoesFirst = true;
         if (meGoesFirst) StartCoroutine(PlayFirst());
         else StartCoroutine(Wait());
     }
