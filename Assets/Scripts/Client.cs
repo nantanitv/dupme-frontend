@@ -153,7 +153,6 @@ public class Client : MonoBehaviour
         CreateRoomResponse room = await GetRoomInfo();
         var players = room.players;
         GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? await GetUserInfo(players[1]) : await GetUserInfo(players[0]);
-        GameSocketIO.EmitJoinRoom();
     }
 
     async public static Task<CreateRoomResponse> GetRoomInfo()
@@ -210,7 +209,7 @@ public class Client : MonoBehaviour
         GameComponents.meGoesFirst = goesFirst.Trim().Equals(GameComponents.me.uuid);
         Debug.Log($"Start: {goesFirst}");
 
-        await GameSocketIO.so.EmitAsync("message", GameComponents.meGoesFirst ? "START0" : "START1"); // START0: me goes first, START1: they go first
+        // await GameSocketIO.so.EmitAsync("message", GameComponents.meGoesFirst ? "START0" : "START1"); // START0: me goes first, START1: they go first
     }
 
     async public static Task EndGame()

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using Newtonsoft.Json.Linq;
 
 public class LobbyInfo : MonoBehaviour
 {
@@ -27,8 +28,17 @@ public class LobbyInfo : MonoBehaviour
             var content = response.GetValue();
             Debug.Log(content.ToString());
 
+            JObject contentObj = JObject.Parse(response.GetValue<string>());
+            var theirUuid = contentObj["data"]["uuid"];
+            GameComponents.them.uuid = theirUuid.ToString();
+            var theirName = Client.GetUserInfo(GameComponents.them.uuid);
+            GameComponents.them.name = theirName.Result;
+
             if (content.ToString().Contains("start_game"))
             {
+                string startsWith = contentObj["data"]["starts_with"].ToString();
+                Debug.Log(startsWith);
+                GameComponents.meGoesFirst = startsWith.Equals(GameComponents.me.uuid);
                 Debug.Log("Going to game");
                 Debug.Log($"hardmode {GameProperties.isHardMode}");
                 readyToLoad = true;

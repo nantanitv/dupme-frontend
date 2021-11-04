@@ -35,11 +35,8 @@ public class GameSocketIO : MonoBehaviour
             if (content.Equals("ENDSEQ")) ReceiveEndSequence();
             else if (content.StartsWith("S") && content.EndsWith("S")) ReceiveScore(content);
             else if (NotesReceiver.NoteIsValid(content)) ReceiveNote(content);
-            else if (content.StartsWith("START"))
-            {
-                if (content.EndsWith("1")) GameComponents.meGoesFirst = true;
-                else if (content.EndsWith("0")) GameComponents.meGoesFirst = false;
-            }
+            // else if (content.Equals("START1")) GameComponents.meGoesFirst = true;
+            // else if (content.Equals("START0")) GameComponents.meGoesFirst = false;
         });
 
         await so.ConnectAsync();

@@ -43,9 +43,6 @@ public class GameComponents : MonoBehaviour
 
     public static Player me = new Player("", "Alice");
     public static Player them = new Player("", "Bobby");
-
-    public Text roundsText;
-    public Text numKeysText;
     #endregion
 
     // Start is called before the first frame update
@@ -64,8 +61,7 @@ public class GameComponents : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        roundsText.text = $"Round {currentRound}/{GameProperties.numRounds}";
-        numKeysText.text = $"Keys Left: {numKeys}";
+        Debug.Log($"meGoesFirst {meGoesFirst}");
     }
 
     private void FixedUpdate()
@@ -75,6 +71,7 @@ public class GameComponents : MonoBehaviour
             Debug.Log("[GameComp] Game Ends");
             Debug.Log($"Scores: {me.name} = {me.score} vs {them.name} = {them.score}");
             EndMyTurn();
+            EndGame();
         }
     }
 
@@ -153,7 +150,7 @@ public class GameComponents : MonoBehaviour
         }
         else
         {
-            StartCoroutine(Wait());
+            EndGame();
         }
     }
 
@@ -175,7 +172,7 @@ public class GameComponents : MonoBehaviour
             {
                 StartCoroutine(Wait());
             }
-            // need to check
+            else EndGame();
         }
         else
         {
