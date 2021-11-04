@@ -70,9 +70,9 @@ public class GameSocketIO : MonoBehaviour
     public static void ReceiveNote(string noteName)
     {
         Debug.Log($"Received {noteName}");
-        var notePlayer = new GameObject().AddComponent<ObjectClicker>();
-        notePlayer.OnNotePlay(noteName);
-        if (!GameComponents.meGoesFirst) NotesReceiver.InputNote(noteName, false);
+        // var notePlayer = new GameObject().AddComponent<ObjectClicker>();
+        // notePlayer.OnNotePlay(noteName);
+        NotesReceiver.InputNote(noteName, false);
     }
 
     public static void EmitScore(int score)

@@ -17,13 +17,15 @@ public class PauseMenu : MonoBehaviour
     void Start()
     {
         pauseMenuUI.SetActive(false);
-        playerOneText.text = GameComponents.me.name + " (You): ";
-        playerTwoText.text = GameComponents.them.name + ": ";
+        playerOneText.text = GameComponents.me.name + " (You): 0";
+        playerTwoText.text = GameComponents.them.name + ": 0";
     }
 
     // Update is called once per frame
     void Update()
     {
+        playerOneText.text = $"{GameComponents.me.name}: {GameComponents.me.score}";
+        playerTwoText.text = $"{GameComponents.them.name}: {GameComponents.them.score}";
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             if (IsPaused) Resume();

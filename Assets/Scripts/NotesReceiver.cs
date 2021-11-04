@@ -21,13 +21,13 @@ public class NotesReceiver
     // isReply: Incoming note = false, Reply note = true
     public static void InputNote(string n, bool isReply)
     {
-        if (NoteIsValid(n))
-        {
+        Debug.Log("[InputNote] Started");
+        // if (NoteIsValid(n))
+        // {
+            Debug.Log("[InputNote] " + n);
             if (!isReply) correctSequence.Add(n);
             else replySequence.Add(n);
-            Debug.Log("[InputNote] " + n);
-            oc.PlayNote(n);
-        }
+        // }
     }
 
     // Check validity of the note value `n` to prevent processing other object names

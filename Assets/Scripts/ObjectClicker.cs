@@ -86,12 +86,13 @@ public class ObjectClicker : MonoBehaviour
         else if (id == "BN5") BN5.Play();
         else if (id == "CN6") CN6.Play();
 
-        if (NotesReceiver.NoteIsValid(id))
-        {
+        // if (NotesReceiver.NoteIsValid(id))
+        // {
             Debug.Log("Valid Note");
             GameComponents.numKeys--;
             Debug.Log("[ObjClicker] Keys left: " + GameComponents.numKeys);
             Debug.Log($"[ObjClicker] Pressed {id}");
-        }
+        if (!GameComponents.meGoesFirst) NotesReceiver.InputNote(id, true);
+        // }
     }
 }
