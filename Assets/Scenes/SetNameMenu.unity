@@ -544,7 +544,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd66fd3b9f137244c84154e7f8b43df9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  so: {fileID: 0}
 --- !u!4 &873064223
 Transform:
   m_ObjectHideFlags: 0
@@ -1293,9 +1292,9 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls: []
   m_FontData:
-    m_Font: {fileID: 12800000, guid: 4beb055f07aaff244873dec698d0363e, type: 3}
+    m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 54
-    m_FontStyle: 2
+    m_FontStyle: 3
     m_BestFit: 0
     m_MinSize: 0
     m_MaxSize: 120
