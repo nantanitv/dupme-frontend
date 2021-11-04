@@ -25,6 +25,7 @@ public class GameSocketIO : MonoBehaviour
             GameComponents.EndGame();
         });
 
+        /*
         so.On("room-event", response =>
         {
             Debug.Log(response);
@@ -38,7 +39,7 @@ public class GameSocketIO : MonoBehaviour
                 Debug.Log("Going to game");
                 StartMenu.GoToGame();
             }
-        });
+        });*/
 
         /*  message: msg, note, endseq, score
          *  score:  "S{score}S", e.g. "S3S"
@@ -47,28 +48,28 @@ public class GameSocketIO : MonoBehaviour
         so.On("message", response =>
         {
             Debug.Log(response);
+
             string content = response.GetValue<string>();
             Debug.Log(content);
-
-            if (NotesReceiver.NoteIsValid(content)) ReceiveNote(content);
-            else if (content.StartsWith("S") && content.EndsWith("S")) ReceiveScore(content);
-            else if (content.Equals("ENDSQ")) ReceiveEndSequence();
         });
+
+
 
         await so.ConnectAsync();
         await so.EmitAsync("message", "deez nutz");
-        EmitJoinRoom();
     }
 
     async public static void EmitJoinRoom()
     {
         string joinReq = $"{{\"room_id\": \"{GameProperties.roomId}\"}}";
         JObject reqJson = JObject.Parse(joinReq);
-        await so.EmitAsync("join-room", reqJson);
+        await so.EmitAsync($"{GameProperties.roomId}/room-event", reqJson);
     }
 
     public static void EmitLeaveRoom()
     {
+        string joinReq = $"{{\"room_id\": \"{GameProperties.roomId}\"}}";
+        JObject reqJson = JObject.Parse(joinReq);
         so.EmitAsync("leave-room", new JSONObject($"{{\"room_id\": {GameProperties.roomId}"));
     }
 

@@ -32,10 +32,10 @@ public class Client : MonoBehaviour
     public static string URL_DEV_ = "https://dupme-backend-staging.herokuapp.com/";
     public static string URL_ = "https://dupme-backend.herokuapp.com/";
 
-    // public static string username = Environment.GetEnvironmentVariable("DUPME_AUTH_USERNAME");
-    // public static string uid = Environment.GetEnvironmentVariable("DUPME_AUTH_UID");
-    public static string username = "admin@dupme.dupme";
-    public static string uid = "4yRoC62AeVUIPkTqdMewUfRr5JI2";
+    //public static string URL_DEV_ = "https://ktns.loca.lt/";
+
+    public static string username = Environment.GetEnvironmentVariable("DUPME_AUTH_USERNAME");
+    public static string uid = Environment.GetEnvironmentVariable("DUPME_AUTH_UID");
 
     public static string AUTH_TOKEN_;
     #endregion
@@ -98,7 +98,16 @@ public class Client : MonoBehaviour
     async public static Task<string> GetUserInfo(string uuid)
     {
         string url = URL_DEV_ + $"user/{uuid}/status";
-        return (await Post(url))["username"];
+        Debug.Log($"[URL] {url}");
+
+        using var client = new HttpClient();
+        client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", AUTH_TOKEN_);
+
+        var response = await client.GetAsync(url);
+        string content = response.Content.ReadAsStringAsync().Result;
+
+        JObject user = JObject.Parse(content);
+        return user["username"].ToString();
     }
 
     async public static Task<string> GetAllUsers()
@@ -138,10 +147,14 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/join?uuid=" + GameComponents.me.uuid;
         await Post(url);
         Debug.Log($"[JoinRoom]: Joined");
+        /*
         string joinReq = $"{{\"room_id\": \"{GameProperties.roomId}\"}}";
         JObject reqJson = JObject.Parse(joinReq);
-        await GameSocketIO.so.EmitAsync("join-room", reqJson);
-        Debug.Log(joinReq);
+        await GameSocketIO.so.EmitAsync($"{GameProperties.roomId}/room-event", reqJson);
+        Debug.Log(joinReq);*/
+
+        GameSocketIO.EmitJoinRoom();
+
         CreateRoomResponse room = await GetRoomInfo();
         var players = room.players;
         GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? await GetUserInfo(players[1]) : await GetUserInfo(players[0]);
