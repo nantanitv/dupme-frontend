@@ -137,9 +137,12 @@ public class Client : MonoBehaviour
         string url = URL_DEV_ + "room/" + GameProperties.roomId + "/join?uuid=" + GameComponents.me.uuid;
         await Post(url);
         Debug.Log($"[JoinRoom]: Joined");
+        string joinReq = $"{{\"room_id\": \"{GameProperties.roomId}\"}}";
+        await GameSocketIO.so.EmitAsync("join-room", new JSONObject(joinReq));
+        Debug.Log(joinReq);
         CreateRoomResponse room = await GetRoomInfo();
         var players = room.players;
-        GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? await GetUserInfo(players[1]) : await GetUserInfo(players[2]);
+        GameComponents.them.name = players[0].Equals(GameComponents.me.name) ? await GetUserInfo(players[1]) : await GetUserInfo(players[0]);
         GameSocketIO.EmitJoinRoom();
     }
 

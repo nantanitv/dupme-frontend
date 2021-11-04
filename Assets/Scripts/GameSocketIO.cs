@@ -3,11 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using SocketIOClient;
 using SocketIOClient.JsonSerializer;
-using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 public class GameSocketIO : MonoBehaviour
 {
     public static SocketIOClient.SocketIO so;
+
+    public class roomEvent
+    {
+
+    }
 
     async void Awake()
     {
@@ -26,12 +31,17 @@ public class GameSocketIO : MonoBehaviour
         so.On("room-event", response =>
         {
             Debug.Log(response);
-            var content = response.GetValue<Dictionary<string,string>>();
-            Debug.Log(content["event"]);
-            // string ev = response.GetValue<string>();
-            // if (ev.Equals("start_game")) GameComponents.StartGame();
+            string content = response.GetValue<string>();
+            Debug.Log(content);
+            JObject roomEventResponse = JObject.Parse(content);
+            string eventType = roomEventResponse["event"].ToString();
+            Debug.Log(eventType);
+            if (eventType.Equals("start_game"))
+            {
+                Debug.Log("Going to game");
+                StartMenu.GoToGame();
+            }
         });
-
 
         /*  message: msg, note, endseq, score
          *  score:  "S{score}S", e.g. "S3S"
