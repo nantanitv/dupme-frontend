@@ -49,7 +49,8 @@ public class PauseMenu : MonoBehaviour
         if (GameComponents.timeIsRunning)
         {
             string timeLeft = ((int)(GameComponents.timeLimit+1)).ToString();
-            timeText.text = timeLeft;
+            if (int.Parse(timeLeft) <= 20) timeText.text = timeLeft;
+            else timeText.text = "0";
         }
     }
 

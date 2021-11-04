@@ -129,7 +129,7 @@ public class GameComponents : MonoBehaviour
     {
         Debug.Log("[PlayLater] Starts");
         StartMyTurn();
-        timeLimit = 20f;
+        timeLimit = 30f;
         timeIsRunning = true;
         Debug.Log("[GameComp] Updated time limit: " + timeLimit);
 

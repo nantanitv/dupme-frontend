@@ -36,10 +36,22 @@ public class GameSocketIO : MonoBehaviour
             else if (content.StartsWith("SCORE")) ReceiveScore(content);
             else if (NotesReceiver.NoteIsValid(content)) ReceiveNote(content);
             else if (content.StartsWith("NAME")) GameComponents.them.name = content.Replace("NAME", "");
+            else if (content.StartsWith("CHAT")) ReceiveChat(content);
         });
 
         await so.ConnectAsync();
         await so.EmitAsync("message", "deez nutz");
+    }
+
+    public static void ReceiveChat(string text)
+    {
+        MessageManager.chatNotification = true;
+        MessageManager.incomingText = text.Replace("CHAT", "");
+    }
+
+    async public static void EmitChat(string text)
+    {
+        await so.EmitAsync("message", $"CHAT{text}");
     }
 
     async public static void EmitJoinRoom()
