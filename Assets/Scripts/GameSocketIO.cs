@@ -8,14 +8,11 @@ using Newtonsoft.Json.Linq;
 public class GameSocketIO : MonoBehaviour
 {
     public static SocketIOClient.SocketIO so;
-
-    public class roomEvent
-    {
-
-    }
+    public GameObject socketHolder;
 
     async void Awake()
     {
+        DontDestroyOnLoad(socketHolder);
         so = new SocketIOClient.SocketIO(Client.URL_DEV_);
 
         so.OnConnected += (sender, args) =>

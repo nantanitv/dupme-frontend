@@ -544,6 +544,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fd66fd3b9f137244c84154e7f8b43df9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  socketHolder: {fileID: 873064221}
 --- !u!4 &873064223
 Transform:
   m_ObjectHideFlags: 0
