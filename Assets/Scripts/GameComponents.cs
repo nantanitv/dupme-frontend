@@ -51,8 +51,14 @@ public class GameComponents : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        StartCoroutine(Delay());
         if (meGoesFirst) StartCoroutine(PlayFirst());
         else StartCoroutine(Wait());
+    }
+
+    IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(5f);
     }
 
     // Update is called once per frame
@@ -120,8 +126,9 @@ public class GameComponents : MonoBehaviour
 
     IEnumerator PlayLater()
     {
+        Debug.Log("[PlayLater] Starts");
         StartMyTurn();
-
+        
         while (timeIsRunning && mePlayable)
         {
             if (timeLimit > 0) timeLimit -= Time.deltaTime;
@@ -138,7 +145,7 @@ public class GameComponents : MonoBehaviour
         int score = NotesReceiver.CalculateScore();
         them.score += score;
         GameSocketIO.EmitScore(score);
-
+        Debug.Log("[PlayLater] Score emitted");
         NewRound();
         if(currentRound < GameProperties.numRounds)
         {
@@ -152,10 +159,15 @@ public class GameComponents : MonoBehaviour
 
     IEnumerator Wait()
     {
+        if (!meGoesFirst) NewRound();
+        meGoesFirst = false;
+
         while (!switchState) yield return null;
+
         // yield return new WaitUntil(SwitchingState);
         switchState = false;
         Debug.Log("switchState switched back");
+
         if (meGoesFirst)
         {
             NewRound();
