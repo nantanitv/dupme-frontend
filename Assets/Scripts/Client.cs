@@ -209,6 +209,8 @@ public class Client : MonoBehaviour
         string goesFirst = content["starts_with"];
         GameComponents.meGoesFirst = goesFirst.Trim().Equals(GameComponents.me.uuid);
         Debug.Log($"Start: {goesFirst}");
+
+        await GameSocketIO.so.EmitAsync("message", GameComponents.meGoesFirst ? "START0" : "START1"); // START0: me goes first, START1: they go first
     }
 
     async public static Task EndGame()

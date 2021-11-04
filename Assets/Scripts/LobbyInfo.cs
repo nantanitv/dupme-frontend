@@ -27,7 +27,6 @@ public class LobbyInfo : MonoBehaviour
             var content = response.GetValue();
             Debug.Log(content.ToString());
 
-            
             if (content.ToString().Contains("start_game"))
             {
                 Debug.Log("Going to game");
