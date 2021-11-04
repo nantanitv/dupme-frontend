@@ -57,11 +57,14 @@ public class GameSocketIO : MonoBehaviour
 
         await so.ConnectAsync();
         await so.EmitAsync("message", "deez nutz");
+        EmitJoinRoom();
     }
 
-    public static void EmitJoinRoom()
+    async public static void EmitJoinRoom()
     {
-        so.EmitAsync("join-room", new JSONObject($"{{\"room_id\": {GameProperties.roomId}"));
+        string joinReq = $"{{\"room_id\": \"{GameProperties.roomId}\"}}";
+        JObject reqJson = JObject.Parse(joinReq);
+        await so.EmitAsync("join-room", reqJson);
     }
 
     public static void EmitLeaveRoom()

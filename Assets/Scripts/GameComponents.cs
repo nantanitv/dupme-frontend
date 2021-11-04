@@ -34,8 +34,8 @@ public class GameComponents : MonoBehaviour
     #region Attibutes
     public static bool mePlayable;
     public static bool meGoesFirst;
-    private static float timeLimit;
-    private static bool timeIsRunning;
+    public static float timeLimit;
+    public static bool timeIsRunning;
     public static bool switchState = false;
 
     public static int numKeys;
@@ -54,20 +54,6 @@ public class GameComponents : MonoBehaviour
         meGoesFirst = true;
         if (meGoesFirst) StartCoroutine(PlayFirst());
         else StartCoroutine(Wait());
-        /*
-        while (currentRound < GameProperties.numRounds)
-        {
-            NewRound();
-            if (meGoesFirst)
-            {
-                StartCoroutine(PlayFirst());
-            }
-            else
-            {
-                StartCoroutine(Wait());
-            }
-        }
-        EndGame();*/
     }
 
     // Update is called once per frame
@@ -177,6 +163,7 @@ public class GameComponents : MonoBehaviour
             {
                 StartCoroutine(Wait());
             }
+            // need to check
         }
         else
         {

@@ -11,6 +11,7 @@ public class PauseMenu : MonoBehaviour
     public Text playerTwoText;
     public Text numRoundText;
     public Text keysLeftText;
+    public Text timeText;
 
     // Initialize variable states
     void Start()
@@ -34,6 +35,12 @@ public class PauseMenu : MonoBehaviour
 
         if (GameComponents.numKeys.ToString() != keysLeftText.text)
             keysLeftText.text = GameComponents.numKeys.ToString();
+
+        if (GameComponents.timeIsRunning)
+        {
+            string timeLeft = ((int)(GameComponents.timeLimit+1)).ToString();
+            timeText.text = timeLeft;
+        }
     }
 
     private void Resume()
