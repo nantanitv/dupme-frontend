@@ -9,6 +9,8 @@ public class NotesReceiver
     static List<string> correctSequence;   // List of notes coming from the first player
     static List<string> replySequence;     // List of "answer" notes
 
+    public static ObjectClicker oc;
+
     public static void ResetSequences()
     {
         correctSequence = new List<string>() {  };
@@ -23,8 +25,8 @@ public class NotesReceiver
         {
             if (!isReply) correctSequence.Add(n);
             else replySequence.Add(n);
-
-            //ObjectClicker.onNotePlay(n);
+            Debug.Log("[InputNote] " + n);
+            oc.PlayNote(n);
         }
     }
 

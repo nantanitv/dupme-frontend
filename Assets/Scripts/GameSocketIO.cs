@@ -27,10 +27,10 @@ public class GameSocketIO : MonoBehaviour
 
         so.On("message", response =>
         {
-            Debug.Log(response);
+            // Debug.Log(response);
 
             string content = response.GetValue<string>();
-            Debug.Log(content);
+            // Debug.Log(content);
 
             if (content.Equals("ENDSEQ")) ReceiveEndSequence();
             else if (content.StartsWith("S") && content.EndsWith("S")) ReceiveScore(content);
@@ -71,7 +71,7 @@ public class GameSocketIO : MonoBehaviour
     {
         Debug.Log($"Received {noteName}");
         var notePlayer = new GameObject().AddComponent<ObjectClicker>();
-        notePlayer.onNotePlay(noteName);
+        notePlayer.OnNotePlay(noteName);
         if (!GameComponents.meGoesFirst) NotesReceiver.InputNote(noteName, false);
     }
 

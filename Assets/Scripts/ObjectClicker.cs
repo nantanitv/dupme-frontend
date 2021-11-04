@@ -36,7 +36,7 @@ public class ObjectClicker : MonoBehaviour
 
     private void Start()
     {
-        GameEvents.current.onNoteClick += onNotePlay;
+        GameEvents.current.onNoteClick += OnNotePlay;
     }
 
     void Update()
@@ -51,14 +51,15 @@ public class ObjectClicker : MonoBehaviour
         }
     }
 
-    public void onNotePlay(string id)
+    public void OnNotePlay(string id)
     {
-        #region Play note sound
-        if (id == "CN4")
-        {
-            CN4.Play();
-            Debug.Log("c4 ja");
-        }
+        PlayNote(id);
+        GameSocketIO.EmitNote(id);
+    }
+
+    public void PlayNote(string id)
+    {
+        if (id == "CN4") CN4.Play();
         else if (id == "DN4") DN4.Play();
         else if (id == "DS4") DS4.Play();
         else if (id == "EN4") EN4.Play();
@@ -84,13 +85,7 @@ public class ObjectClicker : MonoBehaviour
         else if (id == "AS5") AS5.Play();
         else if (id == "BN5") BN5.Play();
         else if (id == "CN6") CN6.Play();
-        #endregion
 
-
-        // separate into new fn
-        GameSocketIO.EmitNote(id);
-        // NotesReceiver.InputNote(id, false);
-        // Debug.Log("[ObjClicker] Round: " + GameComponents.currentRound);
         if (NotesReceiver.NoteIsValid(id))
         {
             Debug.Log("Valid Note");
