@@ -105,6 +105,9 @@ public class GameComponents : MonoBehaviour
     {
         NewRound();
         StartMyTurn();
+        timeLimit = 10f;
+        timeIsRunning = true;
+        Debug.Log("[GameComp] Updated time limit: " + timeLimit);
 
         while (timeIsRunning && mePlayable)
         {
@@ -126,7 +129,10 @@ public class GameComponents : MonoBehaviour
     {
         Debug.Log("[PlayLater] Starts");
         StartMyTurn();
-        
+        timeLimit = 20f;
+        timeIsRunning = true;
+        Debug.Log("[GameComp] Updated time limit: " + timeLimit);
+
         while (timeIsRunning && mePlayable)
         {
             if (timeLimit > 0) timeLimit -= Time.deltaTime;
@@ -193,7 +199,7 @@ public class GameComponents : MonoBehaviour
     public void StartMyTurn()
     {
         mePlayable = true;
-        NewTimer();
+        // NewTimer();
     }
 
     private static void EndMyTurn()

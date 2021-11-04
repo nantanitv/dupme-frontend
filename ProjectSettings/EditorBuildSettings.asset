@@ -29,4 +29,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/AdminMenu.unity
     guid: 97880cb67773f784d980aad1a4c1d1b3
+  - enabled: 1
+    path: Assets/Scenes/Results.unity
+    guid: 5197b958dac82d945b4d3e63e314a1af
   m_configObjects: {}
