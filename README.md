@@ -1,4 +1,22 @@
-# DupMe Front-end
+# DupMe Front-end (Group 1)
+
+## About this Project
+
+This project is a part of the course 2190472 NETCENTRIC ARCHITECTURE, Semester 1 Academic Year 2021. This repository is integrated with the [backend](https://github.com/ktnsdev/dupme-backend) server implementation. The game is built from the Unity3D Engine (more info below), altogether with [doghappy's SocketIOClient for .NET](https://github.com/doghappy/socket.io-client-csharp) as the main client-server-client communication protocol.
+
+## Some Notable Features Include
+
+* Changing in-game background colour
+* Incrementing number of pressable keys by turn
+* Difficulty: 1 vs 2 octaves
+* Keys highlighted when played
+* Built in 3D
+* Background music
+* Adjustable volume
+* Changing piano keys sound
+* Chatbox
+* Multiple playable rooms using Room Code
+* **RAGE QUIT** button
 
 ## Install
 
