@@ -58,6 +58,12 @@ public class StartMenu : MonoBehaviour
         Application.Quit();
     }
 
+    async public static void QuitToMainMenu()
+    {
+        await Client.KickUser();
+        GoToStartMenu();
+    }
+
     async public static void BackFromLobby()
     {
         await Client.CloseRoom();

@@ -58,8 +58,12 @@ public class LobbyInfo : MonoBehaviour
 
     void Update()
     {
-        if (roomCode.text.Equals("ROOM CODE: ") && GameProperties.roomId.Length==4)
-            roomCode.text += GameProperties.roomId;
+        if (!roomCode.text.Replace("ROOM CODE: ", "").Equals(GameProperties.roomId) && GameProperties.roomId.Length == 4)
+        {
+            Debug.Log("room code changing: " + roomCode.text.Replace("ROOM CODE: ", "") + " vs " + GameProperties.roomId);
+
+            roomCode.text = "ROOM CODE: " + GameProperties.roomId;
+        }
 
         if (readyToLoad) LoadGame();
     }
