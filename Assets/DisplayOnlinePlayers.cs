@@ -8,6 +8,7 @@ public class DisplayOnlinePlayers : MonoBehaviour
 {
     public Text onlineUsers;
     public Text status;
+    public Text numOnlineUsers;
 
     // Start is called before the first frame update
     async void Start()
@@ -30,6 +31,18 @@ public class DisplayOnlinePlayers : MonoBehaviour
             onlineUsers.text += $"{user["username"]}:\n";
             status.text += $"{user["status"]}\n";
         }
-        
+
+        numOnlineUsers.text = "...";
+        string numUsers = await Client.GetNumUsers();
+        JObject nuj = JObject.Parse(numUsers);
+        Debug.Log(numUsers);
+        Debug.Log(nuj["players_count"]);
+        numOnlineUsers.text = nuj["players_count"].ToString();
+
+    }
+
+    IEnumerator Delay()
+    {
+        yield return new WaitForSeconds(2);
     }
 }

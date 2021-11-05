@@ -1,9 +1,5 @@
 sceneSetups:
-<<<<<<< HEAD
-- path: Assets/Scenes/HardMode.unity
-=======
-- path: Assets/Scenes/SetNameMenu.unity
->>>>>>> gamemechanics
+- path: Assets/Scenes/CreateRoomMenu.unity
   isLoaded: 1
   isActive: 1
   isSubScene: 0
